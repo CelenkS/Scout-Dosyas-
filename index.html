@@ -827,6 +827,95 @@ table.standings td.rank{font:700 12px var(--font-ui)}
 @media (max-width:520px){ .team-header .season-pill{width:100%} .team-header .season-pill select{flex:1} }
 .lgpick:hover{background:var(--soft2)}
 @media (min-width:1024px){ #content{max-width:920px;margin:0 auto} }
+/* ================= v4 cilası ================= */
+.lgrp{overflow:clip}
+.lgrp-h{position:sticky;top:calc(56px + 62px + env(safe-area-inset-top,0px));z-index:6;background:var(--surface);gap:10px}
+@media (min-width:1024px){ .lgrp-h{top:56px} }
+.lgl{width:30px;height:30px;border-radius:9px;background:#fff;display:grid;place-items:center;flex:none;box-shadow:inset 0 0 0 1px var(--line)}
+.lgl img{width:22px;height:22px;object-fit:contain}
+.lgrp-h small{display:flex;align-items:center;gap:5px}
+.lgrp-h small .fl{width:14px;height:10px;border-radius:2px;object-fit:cover}
+.lgrp-h .cnt.live{display:inline-flex;align-items:center;gap:5px;color:var(--live)}
+.lgrp-h .cnt.live .live-dot{background:var(--live)}
+.lg-tbl{border:1px solid var(--line);background:var(--soft2);color:var(--ink);border-radius:999px;padding:4px 10px;font:600 11.5px var(--font-ui)}
+.lg-tbl:hover{border-color:var(--accent);color:var(--accent)}
+.sr{overflow:hidden}
+.sr .st .cd{font:600 10px var(--font-ui);color:var(--accent);background:var(--sel);border-radius:6px;padding:1px 5px;margin-top:2px}
+.sr .tm .star{font-style:normal;color:#F5B400;font-size:11px;margin-left:-2px}
+.sr .prog{position:absolute;left:0;bottom:0;height:2px;background:var(--live);opacity:.8}
+.sr.is-live{background:linear-gradient(90deg,color-mix(in srgb,var(--live) 6%,transparent),transparent 40%)}
+.sr.mine .tms{border-left:2px solid var(--accent)}
+/* maç akışı */
+.flow{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px 8px;margin-top:4px}
+.flow-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font:600 12px var(--font-ui);margin-bottom:4px}
+.flow-h b{font:700 13px var(--font-ui)}
+.flow-h span{display:flex;align-items:center;gap:6px;min-width:0;max-width:38%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flow-h img{width:18px;height:18px;object-fit:contain}
+.flow-h .h{color:var(--home)}.flow-h .a{color:var(--away);justify-content:flex-end}
+.flow svg{width:100%;height:120px;display:block}
+.flow-lg{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font:500 11px var(--font-ui);color:var(--ink2)}
+.flow-lg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+/* önemli istatistikler */
+.kst{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (min-width:560px){ .kst{grid-template-columns:repeat(3,1fr)} }
+.kst-i{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px}
+.kst-v{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kst-v span{font:500 11.5px var(--font-ui);color:var(--ink2);text-align:center}
+.kst-v b{font:700 15px var(--font-ui);padding:1px 6px;border-radius:6px}
+.kst-v b.win.h{background:var(--home);color:#fff}.kst-v b.win.a{background:var(--away);color:#fff}
+.kst-bar{display:flex;gap:3px;height:4px;margin-top:8px}
+.kst-bar i{display:block;height:100%;border-radius:99px}
+.kst-bar .h{background:var(--home)}.kst-bar .a{background:var(--away)}
+.ev-sc{font:700 11px var(--font-ui);background:var(--soft);color:var(--ink);border-radius:6px;padding:1px 6px;margin-left:4px}
+/* oyuncu tablosu */
+.ptbl-wrap{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);overflow:auto;max-height:70vh}
+.ptbl{border-collapse:separate;border-spacing:0;width:100%;font:500 12.5px var(--font-ui);white-space:nowrap}
+.ptbl th{position:sticky;top:0;z-index:2;background:var(--surface);font:600 11.5px var(--font-ui);color:var(--ink2);padding:10px 8px;border-bottom:1px solid var(--line);cursor:pointer;text-align:center}
+.ptbl th.on{color:var(--accent)}
+.ptbl td{padding:8px;border-bottom:1px solid var(--line);text-align:center}
+.ptbl td.on{background:color-mix(in srgb,var(--accent) 5%,transparent);font-weight:700}
+.ptbl td small{color:var(--ink2);font-size:10.5px}
+.ptbl .pn{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;min-width:150px;max-width:180px}
+.ptbl th.pn{z-index:3}
+.ptbl td.pn{display:flex;align-items:center;gap:6px}
+.ptbl td.pn img{width:16px;height:16px;object-fit:contain}
+.ptbl td.pn .nm{overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.ptbl .pc{width:3px;height:22px;border-radius:2px;flex:none}.ptbl .pc.h{background:var(--home)}.ptbl .pc.a{background:var(--away)}
+.ptbl tbody tr{cursor:pointer}.ptbl tbody tr:hover td{background:var(--soft2)}
+.lu-seg button.active{background:var(--surface);color:var(--ink)}
+/* H2H */
+.h2f{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.h2f:last-child{border-bottom:0}
+.h2f>span{display:flex;align-items:center;gap:8px;font:600 13px var(--font-ui);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h2f>span img{width:20px;height:20px;object-fit:contain}
+.h2f>div{display:flex;gap:6px}
+.h2f-i{display:flex;flex-direction:column;align-items:center;gap:3px}
+.h2f-i img{width:14px;height:14px;object-fit:contain}
+.h2s{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;text-align:center}
+.h2s div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.h2s b{font:800 26px var(--font-ui)}
+.h2s span{font:500 11.5px var(--font-ui);color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h2bar{display:flex;gap:3px;height:8px;margin-top:10px}
+.h2bar i{display:block;height:100%;border-radius:99px}
+/* puan durumu */
+table.standings td.rank .rk{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:var(--soft);font:700 12px var(--font-ui)}
+table.standings td.pts{font-weight:800}
+table.standings tr.mine td{background:var(--sel)}
+table.standings td.fm{white-space:nowrap}
+.fm-b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;color:#fff;font:700 10px var(--font-ui);margin-right:2px}
+@media (max-width:560px){ table.standings .xs2{display:none} table.standings .fm{display:none} }
+@media (max-width:380px){ table.standings .xs{display:none} }
+/* genel cila */
+.fxacts .icon-btn{background:var(--surface)}
+.sect-h{display:flex;align-items:center;gap:8px}
+.sect-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.sect-h button,.sect-h span:last-child{margin-left:auto}
+.fxtabs button{flex:0 0 auto}
+.fxtabs{justify-content:flex-start}
+.sr.wide{grid-template-columns:52px 1fr auto 58px}
+table.standings td.team{display:table-cell;white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+table.standings td.team img{vertical-align:middle;margin-right:8px}
+table.standings tr.mine td.rank,table.standings tr.mine td{background:var(--sel)}
 
 body:has(.modal-overlay){overflow:hidden}
 </style>
@@ -4233,12 +4322,16 @@ async function openFixtureModal(fx){
         <button data-p="events">Detaylar</button>
         <button data-p="lineups">Kadrolar</button>
         <button data-p="stats">İstatistikler</button>
+        <button data-p="players">Oyuncular</button>
+        <button data-p="h2h">H2H</button>
         <button data-p="notes">📝 Notlarım <span class="cnt" id="fxNoteCnt" hidden></span></button>
       </div>
       <div class="fxpane" data-pane="notes">${fixtureNotesPaneHtml(fx, (existing && existing.payload) || {})}</div>
       <div class="fxpane" data-pane="stats"><div id="fxStats"><div class="loading">İstatistikler yükleniyor...</div></div></div>
       <div class="fxpane" data-pane="lineups"><div id="fxLineups"><div class="loading">Kadrolar yükleniyor...</div></div></div>
       <div class="fxpane" data-pane="events"><div id="fxEvents"><div class="loading">Olaylar yükleniyor...</div></div></div>
+      <div class="fxpane" data-pane="players"><div id="fxPlayers"></div></div>
+      <div class="fxpane" data-pane="h2h"><div id="fxH2H"></div></div>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -4280,6 +4373,7 @@ async function openFixtureModal(fx){
   function showPane(p){
     overlay.querySelectorAll('#fxTabs button').forEach(b=> b.classList.toggle('active', b.getAttribute('data-p')===p));
     overlay.querySelectorAll('.fxpane').forEach(el=> el.hidden = el.getAttribute('data-pane')!==p);
+    if(p==='players' || p==='h2h') fxLazyPane(p, overlay, fx);
   }
   overlay.querySelectorAll('#fxTabs button').forEach(b=> b.onclick = ()=>{
     showPane(b.getAttribute('data-p'));
@@ -7228,12 +7322,11 @@ async function loadStandingsTable(league, container, season){
       <div class="season-pill" style="margin-bottom:10px; display:inline-flex;">Sezon <select id="standingsSeasonInput">${seasonOptionsHtml(season)}</select></div>
       <button class="icon-btn" id="shareStandingsBtn" style="margin-left:8px;">📸 Paylaşım Kartı</button>
       <div style="font-size:11px; color:var(--chalk-dim); margin-bottom:8px; display:flex; gap:14px; flex-wrap:wrap;">
-        <span><span style="display:inline-block; width:10px; height:10px; background:#3B82F6; border-radius:2px; margin-right:4px;"></span>Şampiyonlar Ligi</span>
-        <span><span style="display:inline-block; width:10px; height:10px; background:#F59E0B; border-radius:2px; margin-right:4px;"></span>Avrupa Ligi/Konferans</span>
-        <span><span style="display:inline-block; width:10px; height:10px; background:var(--good); border-radius:2px; margin-right:4px;"></span>Yükselme</span>
-        <span><span style="display:inline-block; width:10px; height:10px; background:var(--bad); border-radius:2px; margin-right:4px;"></span>Düşme</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:#374DF5; border-radius:2px; margin-right:4px;"></span>Şampiyonlar Ligi</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:#F08A24; border-radius:2px; margin-right:4px;"></span>Avrupa Ligi/Konferans</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:#1FAD4B; border-radius:2px; margin-right:4px;"></span>Yükselme</span>
+        <span><span style="display:inline-block; width:10px; height:10px; background:#E0301E; border-radius:2px; margin-right:4px;"></span>Düşme</span>
       </div>
-      <div id="leaderboardsBox"></div>
     `;
 
     if(groups.length){
@@ -7241,22 +7334,23 @@ async function loadStandingsTable(league, container, season){
         <div class="card dossier">
           ${groups.length>1? '<h3 style="font-size:14px;margin:0 0 8px;">Grup '+(gi+1)+'</h3>':''}
           <table class="standings">
-            <thead><tr><th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th><th>Av</th><th>P</th></tr></thead>
+            <thead><tr><th>#</th><th>Takım</th><th>O</th><th class="xs">G</th><th class="xs">B</th><th class="xs">M</th><th class="xs2">AG</th><th class="xs2">YG</th><th>Av</th><th>P</th><th class="fm">Form</th></tr></thead>
             <tbody>
               ${grp.map(row=>{
                 const zc = zoneColor(row.description);
                 return `
-                <tr class="standings-row" data-tid="${row.team.id}" data-tname="${esc(row.team.name)}" data-tlogo="${esc(row.team.logo||'')}" style="cursor:pointer; ${zc?'border-left:4px solid '+zc+';':''}" title="${esc(row.description||'')}">
-                  <td class="rank">${row.rank}</td>
+                <tr class="standings-row ${followSets().teams.has(row.team.id)?'mine':''}" data-tid="${row.team.id}" data-tname="${esc(row.team.name)}" data-tlogo="${esc(row.team.logo||'')}" style="cursor:pointer;" title="${esc(row.description||'')}">
+                  <td class="rank"><span class="rk" style="${row.description? 'background:'+zc+';color:#fff' : ''}">${row.rank}</span></td>
                   <td class="team"><img loading="lazy" decoding="async" src="${row.team.logo}" onerror="this.style.visibility='hidden'">${esc(row.team.name)}</td>
                   <td class="num">${row.all.played}</td>
-                  <td class="num">${row.all.win}</td>
-                  <td class="num">${row.all.draw}</td>
-                  <td class="num">${row.all.lose}</td>
-                  <td class="num">${row.all.goals.for}</td>
-                  <td class="num">${row.all.goals.against}</td>
-                  <td class="num">${row.goalsDiff}</td>
-                  <td class="num" style="font-weight:700;">${row.points}</td>
+                  <td class="num xs">${row.all.win}</td>
+                  <td class="num xs">${row.all.draw}</td>
+                  <td class="num xs">${row.all.lose}</td>
+                  <td class="num xs2">${row.all.goals.for}</td>
+                  <td class="num xs2">${row.all.goals.against}</td>
+                  <td class="num">${row.goalsDiff>0?'+':''}${row.goalsDiff}</td>
+                  <td class="num pts">${row.points}</td>
+                  <td class="fm">${formHtml(row.form)}</td>
                 </tr>
               `;}).join('')}
             </tbody>
@@ -7301,6 +7395,7 @@ async function loadStandingsTable(league, container, season){
       }).join('');
     }
 
+    html += '<div id="leaderboardsBox" style="margin-top:14px"></div>';
     container.innerHTML = html;
     loadLeaderboards(league, season, groups, document.getElementById('leaderboardsBox'));
     const shareStandingsBtn = document.getElementById('shareStandingsBtn');
@@ -8093,11 +8188,11 @@ async function renderMatchesHome(content, opts){
     const open = i < openLimit;
     const liveN = g.items.filter(f=> LIVE_STATUSES.includes(f.fixture.status.short)).length;
     return `<div class="lgrp ${open?'':'closed'}" data-lid="${g.league.id}">
-      <div class="lgrp-h">${g.league.flag ? `<img loading="lazy" decoding="async" class="fl" src="${g.league.flag}" loading="lazy" alt="" onerror="this.style.display='none'">` : `<img loading="lazy" decoding="async" src="${g.league.logo}" loading="lazy" alt="" onerror="this.style.display='none'">`}
-        <div><b>${esc(g.league.name)}</b><small>${esc(g.league.country||'')}${g.league.round ? ' · '+esc(String(g.league.round).replace('Regular Season - ','Hafta ')) : ''}</small></div>
-        ${liveN ? `<span class="cnt" style="color:var(--live)">${liveN} canlı</span>` : `<span class="cnt">${g.items.length}</span>`}<span class="chev">⌄</span></div>
-      <div class="lgrp-b">${open ? g.items.map(f=> sofaRowHtml(f, flags, teams)).join('') : ''}</div>
-    </div>`;
+      <div class="lgrp-h"><span class="lgl"><img loading="lazy" decoding="async" src="${g.league.logo}" loading="lazy" alt="" onerror="this.style.visibility='hidden'"></span>
+        <div><b>${esc(g.league.name)}</b><small>${g.league.flag ? `<img loading="lazy" decoding="async" class="fl" src="${g.league.flag}" loading="lazy" alt="" onerror="this.remove()">` : ''}${esc(g.league.country||'')}${g.league.round ? ' · '+esc(String(g.league.round).replace('Regular Season - ','Hafta ')) : ''}</small></div>
+        ${liveN ? `<span class="cnt live"><i class="live-dot"></i>${liveN} canlı</span>` : `<span class="cnt">${g.items.length} maç</span>`}
+        <button class="lg-tbl" data-tbl="${g.league.id}" data-lname="${esc(g.league.name)}" data-llogo="${esc(g.league.logo||'')}" title="Puan durumu">Tablo</button><span class="chev">⌄</span></div>
+      <div class="lgrp-b">${open ? g.items.map(f=> sofaRowHtml(f, flags, teams)).join('') : ''}    </div>`;
   };
   body.innerHTML = `
     <div class="mfilter">${chips.map(([k,l,c])=>`<button data-sc="${k}" class="${scope===k?'active':''}">${l} <span style="opacity:.6">${c}</span></button>`).join('')}</div>
@@ -8106,6 +8201,8 @@ async function renderMatchesHome(content, opts){
   const byId = new Map(list.map(f=>[String(f.fixture.id), f]));
   const wireRows = (root)=> root.querySelectorAll('.sr[data-fx]').forEach(r=> r.onclick = ()=>{ const f = byId.get(r.getAttribute('data-fx')); if(f) openFixtureModal(f); });
   body.querySelectorAll('.lgrp').forEach(gEl=>{
+    const tb = gEl.querySelector('.lg-tbl');
+    if(tb) tb.onclick = (e)=>{ e.stopPropagation(); state.standingsLeague = {id:parseInt(tb.getAttribute('data-tbl'),10), name:tb.getAttribute('data-lname'), logo:tb.getAttribute('data-llogo')}; goView('standings'); };
     gEl.querySelector('.lgrp-h').onclick = ()=>{
       const b = gEl.querySelector('.lgrp-b');
       if(gEl.classList.contains('closed') && !b.innerHTML){ const g = arr.find(x=> String(x.league.id)===gEl.getAttribute('data-lid')); if(g){ b.innerHTML = g.items.map(f=> sofaRowHtml(f, flags, teams)).join(''); wireRows(b); } }
@@ -8349,6 +8446,231 @@ async function loadFixtures(team, container){
     const next = all.find(f=> !['FT','AET','PEN','PST','CANC','ABD'].includes(f.fixture.status.short));
     if(next){ const el = container.querySelector(`.sr[data-fx="${next.fixture.id}"]`); if(el){ el.style.background = 'var(--sel)'; } }
   }catch(e){ container.innerHTML = '<div class="banner">⚠ '+esc(e.message)+'</div>'; }
+}
+
+// =====================================================================
+// v4: Sofascore'dan da net — maç akışı grafiği, oyuncu istatistik tablosu, H2H, yapışkan lig başlıkları
+// =====================================================================
+function zoneColor(desc){
+  if(!desc) return null;
+  const d = desc.toLowerCase();
+  if(d.includes('champions league')) return '#374DF5';
+  if(d.includes('europa league')) return '#F08A24';
+  if(d.includes('conference')) return '#14B8A6';
+  if(d.includes('relegation') && !d.includes('play')) return '#E0301E';
+  if(d.includes('relegation')) return '#F59E0B';
+  if(d.includes('promotion') && d.includes('play')) return '#7C3AED';
+  if(d.includes('promotion')) return '#1FAD4B';
+  return '#8A93A3';
+}
+function formHtml(form){
+  if(!form) return '';
+  return String(form).slice(-5).split('').map(c=>{ const m = {W:['G','#1FAD4B'], D:['B','#9AA0AB'], L:['M','#E0301E']}[c]; return m ? `<span class="fm-b" style="background:${m[1]}">${m[0]}</span>` : ''; }).join('');
+}
+function hoursUntil(d){
+  const ms = new Date(d) - Date.now(); if(ms <= 0 || ms > 6*3600e3) return '';
+  const h = Math.floor(ms/3600e3), m = Math.floor((ms%3600e3)/60e3);
+  return h ? `${h}s ${m}dk` : `${m} dk`;
+}
+
+// maç satırı: İY skoru, geri sayım, canlı ilerleme çubuğu
+function sofaRowHtml(fx, flags, teamSet, sideOverride){
+  const s = fx.fixture.status.short;
+  const live = LIVE_STATUSES.includes(s);
+  const played = ['FT','AET','PEN'].includes(s);
+  const t = new Date(fx.fixture.date).toLocaleTimeString('tr-TR',{hour:'2-digit', minute:'2-digit'});
+  const ht = fx.score && fx.score.halftime && fx.score.halftime.home!=null ? `İY ${fx.score.halftime.home}-${fx.score.halftime.away}` : '';
+  let st;
+  if(live) st = `<div class="st live"><b>${s==='HT' ? 'İY' : (fx.fixture.status.elapsed ? fx.fixture.status.elapsed+"'" : 'Canlı')}</b><span>${s==='HT' ? 'Devre' : 'Canlı'}</span></div>`;
+  else if(played) st = `<div class="st"><b>${s==='PEN'?'Pen.':s==='AET'?'UZ':'MS'}</b><span>${ht || t}</span></div>`;
+  else if(s==='PST') st = `<div class="st"><span>${t}</span><b>Ert.</b></div>`;
+  else if(['CANC','ABD'].includes(s)) st = `<div class="st"><span>${t}</span><b>İptal</b></div>`;
+  else { const cd = hoursUntil(fx.fixture.date); st = `<div class="st"><b style="color:var(--ink)">${t}</b>${cd? `<span class="cd">${cd}</span>` : ''}</div>`; }
+  const hw = fx.teams.home.winner===true, aw = fx.teams.away.winner===true;
+  const decided = played && (hw || aw);
+  const cls = (w)=> decided ? (w ? 'w' : 'l') : '';
+  const started = live || played;
+  const id = String(fx.fixture.id);
+  const mine = teamSet && (teamSet.has(fx.teams.home.id) || teamSet.has(fx.teams.away.id));
+  const fh = teamSet && teamSet.has(fx.teams.home.id), fa = teamSet && teamSet.has(fx.teams.away.id);
+  const prog = live && fx.fixture.status.elapsed ? Math.min(100, fx.fixture.status.elapsed/90*100) : 0;
+  let side;
+  if(sideOverride!==undefined) side = sideOverride + (flags && flags.notes.has(id) ? '<span class="nd">📝</span>' : '');
+  else side = (flags && flags.notes.has(id) ? '<span class="nd" title="Notun var">📝</span>' : '') + (flags && flags.watched.has(id) ? '<span class="nd" title="İzledin">👁️</span>' : '');
+  return `<div class="sr ${mine?'mine':''} ${live?'is-live':''}" data-fx="${id}">
+    ${st}
+    <div class="tms">
+      <div class="tm ${cls(hw)}"><img loading="lazy" decoding="async" src="${fx.teams.home.logo}" loading="lazy" alt="" onerror="this.style.visibility='hidden'"><span>${esc(fx.teams.home.name)}</span>${fh? '<i class="star">★</i>' : ''}</div>
+      <div class="tm ${cls(aw)}"><img loading="lazy" decoding="async" src="${fx.teams.away.logo}" loading="lazy" alt="" onerror="this.style.visibility='hidden'"><span>${esc(fx.teams.away.name)}</span>${fa? '<i class="star">★</i>' : ''}</div>
+    </div>
+    <div class="scs ${live?'live':''}">${started ? `<span class="${decided && !hw?'l':''}">${fx.goals.home ?? 0}</span><span class="${decided && !aw?'l':''}">${fx.goals.away ?? 0}</span>` : ''}</div>
+    <div class="side">${side}</div>
+    ${prog ? `<i class="prog" style="width:${prog}%"></i>` : ''}
+  </div>`;
+}
+
+// ---------- MAÇ AKIŞI (zaman çizelgesi grafiği) ----------
+function matchFlowSvg(events, fx){
+  const s = fx.fixture.status.short;
+  const live = LIVE_STATUSES.includes(s);
+  const maxMin = Math.max(90, ...events.map(e=> (e.time.elapsed||0) + (e.time.extra||0)), live ? (fx.fixture.status.elapsed||0) : 0);
+  const X = (m)=> 30 + (Math.min(m, maxMin)/maxMin)*540;
+  const now = live ? (fx.fixture.status.elapsed||0) : (['FT','AET','PEN'].includes(s) ? maxMin : 0);
+  const marks = events.filter(e=> e.type==='Goal' || e.type==='Card' || e.type==='subst').map(e=>{
+    const home = e.team && e.team.id===fx.teams.home.id;
+    const m = (e.time.elapsed||0) + (e.time.extra||0);
+    let sym, r = 9, y = home ? 38 : 82, fill, txt = '';
+    if(e.type==='Goal'){ if(e.detail==='Missed Penalty') return ''; sym = 'goal'; fill = home ? 'var(--home)' : 'var(--away)'; r = 11; txt = '⚽'; }
+    else if(e.type==='Card'){ sym = 'card'; fill = e.detail==='Yellow Card' ? '#F5C518' : '#E0301E'; }
+    else { sym = 'sub'; fill = 'var(--ink2)'; r = 4; }
+    const x = X(m);
+    const title = `${m}' ${e.player && e.player.name || ''}`;
+    if(sym==='card') return `<g><title>${esc(title)}</title><rect x="${x-4}" y="${(home?y:y)-6}" width="8" height="12" rx="1.5" fill="${fill}"/></g>`;
+    if(sym==='sub') return `<g><title>${esc(title)}</title><circle cx="${x}" cy="${home? 50 : 70}" r="${r}" fill="${fill}" opacity=".55"/></g>`;
+    return `<g><title>${esc(title)}</title><line x1="${x}" x2="${x}" y1="60" y2="${y}" stroke="${fill}" stroke-width="2"/><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/><text x="${x}" y="${y+4}" font-size="11" text-anchor="middle">${txt}</text></g>`;
+  }).join('');
+  return `<div class="flow">
+    <div class="flow-h"><span class="h"><img loading="lazy" decoding="async" src="${fx.teams.home.logo}" alt="" onerror="this.remove()">${esc(fx.teams.home.name)}</span><b>Maç akışı</b><span class="a">${esc(fx.teams.away.name)}<img loading="lazy" decoding="async" src="${fx.teams.away.logo}" alt="" onerror="this.remove()"></span></div>
+    <svg viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="Maç akışı">
+      <rect x="30" y="56" width="540" height="8" rx="4" fill="var(--soft)"/>
+      ${now ? `<rect x="30" y="56" width="${X(now)-30}" height="8" rx="4" fill="var(--accent)" opacity=".35"/>` : ''}
+      <line x1="${X(45)}" x2="${X(45)}" y1="48" y2="72" stroke="var(--ink2)" stroke-dasharray="2 2"/>
+      <text x="30" y="112" font-size="11" fill="var(--ink2)">0'</text><text x="${X(45)}" y="112" font-size="11" fill="var(--ink2)" text-anchor="middle">İY</text><text x="570" y="112" font-size="11" fill="var(--ink2)" text-anchor="end">${maxMin}'</text>
+      ${live ? `<circle cx="${X(now)}" cy="60" r="5" fill="var(--live)"><animate attributeName="opacity" values="1;.3;1" dur="1.2s" repeatCount="indefinite"/></circle>` : ''}
+      ${marks}
+    </svg>
+    <div class="flow-lg"><span><i style="background:var(--home)"></i>Gol</span><span><i style="background:#F5C518;border-radius:2px"></i>Sarı</span><span><i style="background:#E0301E;border-radius:2px"></i>Kırmızı</span><span><i style="background:var(--ink2);opacity:.55"></i>Değişiklik</span></div>
+  </div>`;
+}
+async function fillKeyStats(fx, el){
+  if(!el) return;
+  const s = fx.fixture.status.short;
+  if(!(['FT','AET','PEN'].includes(s) || LIVE_STATUSES.includes(s))) return;
+  try{
+    const stats = await apiFetch('/fixtures/statistics', {fixture:fx.fixture.id}, 'high');
+    if(!stats || stats.length<2 || !document.body.contains(el)) return;
+    const f = (i,t)=>{ const x = ((stats[i]||{}).statistics||[]).find(z=>z.type===t); return x && x.value!=null ? x.value : null; };
+    const items = [['Ball Possession','Topa sahip olma'],['expected_goals','xG'],['Total Shots','Şut'],['Shots on Goal','İsabetli şut'],['Corner Kicks','Korner'],['Passes %','Pas isabeti']]
+      .map(([t,l])=>[l, f(0,t), f(1,t)]).filter(r=> r[1]!==null || r[2]!==null);
+    if(!items.length) return;
+    const n = (v)=> parseFloat(String(v??0).replace('%',''))||0;
+    el.innerHTML = `<div class="sect-h">Önemli istatistikler</div><div class="kst">${items.map(([l,h,a])=>{ const hv=n(h), av=n(a), tot=(hv+av)||1; return `<div class="kst-i"><div class="kst-v"><b class="${hv>av?'win h':''}">${esc(h??0)}</b><span>${l}</span><b class="${av>hv?'win a':''}">${esc(a??0)}</b></div><div class="kst-bar"><i class="h" style="width:${hv/tot*100}%"></i><i class="a" style="width:${av/tot*100}%"></i></div></div>`; }).join('')}</div>`;
+  }catch(e){}
+}
+function modernEventsHtml(events, fx){
+  const icon = (ev)=>{
+    if(ev.type==='Goal') return ev.detail==='Own Goal' ? '⚽<small style="color:var(--bad)">KK</small>' : ev.detail==='Penalty' ? '⚽<small>P</small>' : ev.detail==='Missed Penalty' ? '❌' : '⚽';
+    if(ev.type==='Card') return ev.detail==='Yellow Card' ? '🟨' : '🟥';
+    if(ev.type==='subst') return '🔄';
+    if(ev.type==='Var') return '📺';
+    return '•';
+  };
+  const link = (pl, team)=> pl && pl.name ? `<a href="#" class="ev-player-link" data-pid="${pl.id||''}" data-team-id="${team.id}" data-team-name="${esc(team.name)}" data-team-logo="${esc(team.logo||'')}">${esc(pl.name)}</a>` : '';
+  let h = 0, a = 0, htDone = false;
+  const rows = [];
+  events.forEach(ev=>{
+    if(!htDone && ev.time.elapsed>45){ htDone = true; rows.push(`<div class="ev-ht"><span>İY ${h} - ${a}</span></div>`); }
+    if(ev.type==='Goal' && ev.detail!=='Missed Penalty'){ if(ev.team.id===fx.teams.home.id) h++; else a++; }
+    const isHome = ev.team && ev.team.id===fx.teams.home.id;
+    let sub = '';
+    if(ev.type==='Goal' && ev.assist && ev.assist.name) sub = 'Asist: '+link(ev.assist, ev.team);
+    else if(ev.type==='subst' && ev.assist && ev.assist.name) sub = '↔ '+link(ev.assist, ev.team);
+    else if(ev.comments) sub = esc(ev.comments);
+    const scoreTag = ev.type==='Goal' && ev.detail!=='Missed Penalty' ? ` <span class="ev-sc">${h}-${a}</span>` : '';
+    const main = link(ev.player, ev.team) + scoreTag;
+    const c = `<div class="ev-c ${isHome?'h':'a'}">${isHome? `<div class="tx"><b>${main}</b>${sub?`<small>${sub}</small>`:''}</div><span class="ic">${icon(ev)}</span>` : `<span class="ic">${icon(ev)}</span><div class="tx"><b>${main}</b>${sub?`<small>${sub}</small>`:''}</div>`}</div>`;
+    rows.push(`<div class="ev-r ${ev.type==='Goal'&&ev.detail!=='Missed Penalty'?'goal':''}">${isHome? c : '<div></div>'}<span class="ev-m">${ev.time.elapsed}${ev.time.extra?'+'+ev.time.extra:''}'</span>${isHome? '<div></div>' : c}</div>`);
+  });
+  if(['FT','AET','PEN'].includes(fx.fixture.status.short)) rows.push(`<div class="ev-ht"><span>MS ${fx.goals.home ?? h} - ${fx.goals.away ?? a}</span></div>`);
+  const uid = fx.fixture.id+Math.random().toString(36).slice(2,6);
+  setTimeout(()=>{ fillBestPlayers(fx, document.getElementById('bp'+uid)); fillKeyStats(fx, document.getElementById('ks'+uid)); }, 0);
+  return `${matchFlowSvg(events, fx)}
+    <div class="bestp" id="bp${uid}"></div>
+    <div id="ks${uid}"></div>
+    <div class="sect-h">Maç olayları</div>
+    <div class="evt">${rows.join('') || '<div class="empty" style="padding:14px">Olay yok</div>'}</div>
+    ${matchInfoHtml(fx)}`;
+}
+
+// ---------- OYUNCU İSTATİSTİKLERİ TABLOSU ----------
+async function renderPlayersTab(fx, box){
+  box.innerHTML = '<div class="lgrp" style="padding:6px">'+'<div class="skel"></div>'.repeat(6)+'</div>';
+  let data;
+  try{ data = await apiFetch('/fixtures/players', {fixture:fx.fixture.id}, 'high'); }
+  catch(e){ box.innerHTML = `<div class="banner">Oyuncu istatistikleri alınamadı: ${esc(e.message)}</div>`; return; }
+  if(!data || !data.length){ box.innerHTML = '<div class="card empty"><div class="display">Henüz oyuncu istatistiği yok</div><p>Maç başlayınca burada her oyuncunun reytingi ve istatistikleri görünecek.</p></div>'; return; }
+  const rows = [];
+  data.forEach(tb=> (tb.players||[]).forEach(p=>{
+    const s = (p.statistics && p.statistics[0]) || {};
+    const g = s.games||{}, gl = s.goals||{}, sh = s.shots||{}, ps = s.passes||{}, du = s.duels||{}, tk = s.tackles||{}, dr = s.dribbles||{}, fo = s.fouls||{}, cd = s.cards||{};
+    if(!g.minutes && !g.rating) return;
+    rows.push({id:p.player.id, name:p.player.name, photo:p.player.photo, team:tb.team, side: tb.team.id===fx.teams.home.id ? 'h' : 'a', pos:g.position||'', sub:!!g.substitute,
+      r: parseFloat(g.rating)||0, min:g.minutes||0, g:gl.total||0, a:gl.assists||0, sh:sh.total||0, son:sh.on||0, kp:ps.key||0, pt:ps.total||0, pa: parseInt(ps.accuracy)||0,
+      dw:du.won||0, dt:du.total||0, tk:tk.total||0, int:tk.interceptions||0, ds:dr.success||0, da:dr.attempts||0, fd:fo.drawn||0, fc:fo.committed||0, y:cd.yellow||0, rd:cd.red||0, sv:gl.saves||0});
+  }));
+  const cols = [
+    ['r','Reyting', r=> ratingChip(r.r) || '–'], ['min','Dk', r=>r.min], ['g','Gol', r=>r.g||'·'], ['a','Asist', r=>r.a||'·'],
+    ['sh','Şut (isb.)', r=> r.sh ? `${r.sh} <small>(${r.son})</small>` : '·'], ['kp','Kilit pas', r=>r.kp||'·'], ['pt','Pas (%)', r=> r.pt ? `${r.pt} <small>(${r.pa}%)</small>` : '·'],
+    ['dw','İkili', r=> r.dt ? `${r.dw}/${r.dt}` : '·'], ['tk','Top kapma', r=>r.tk||'·'], ['int','Araya girme', r=>r.int||'·'], ['ds','Çalım', r=> r.da ? `${r.ds}/${r.da}` : '·'],
+    ['fd','Faul (yap.)', r=> `${r.fd||0} <small>(${r.fc||0})</small>`], ['sv','Kurtarış', r=>r.sv||'·']
+  ];
+  let sortKey = 'r', dir = -1, side = 'all';
+  const posTr = {G:'K', D:'D', M:'OS', F:'F'};
+  function draw(){
+    const list = rows.filter(r=> side==='all' || r.side===side).sort((x,y)=> ((x[sortKey]||0)-(y[sortKey]||0))*dir || y.r-x.r);
+    box.querySelector('.ptbl-wrap').innerHTML = `<table class="ptbl"><thead><tr><th class="pn">Oyuncu</th>${cols.map(([k,l])=>`<th data-k="${k}" class="${sortKey===k?'on':''}">${l}${sortKey===k ? (dir<0?' ↓':' ↑') : ''}</th>`).join('')}</tr></thead>
+      <tbody>${list.map(r=>`<tr data-pid="${r.id}" data-team-id="${r.team.id}" data-team-name="${esc(r.team.name)}" data-team-logo="${esc(r.team.logo||'')}">
+        <td class="pn"><span class="pc ${r.side}"></span><img loading="lazy" decoding="async" src="${r.team.logo}" alt="" onerror="this.style.visibility='hidden'"><span class="nm">${esc(r.name)}</span><small>${posTr[r.pos]||''}${r.sub?' · Y':''}</small></td>
+        ${cols.map(([k,,f])=>`<td class="${sortKey===k?'on':''}">${f(r)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    box.querySelectorAll('th[data-k]').forEach(th=> th.onclick = ()=>{ const k = th.getAttribute('data-k'); if(sortKey===k) dir = -dir; else { sortKey = k; dir = -1; } draw(); });
+    box.querySelectorAll('tbody tr').forEach(tr=> tr.onclick = ()=> openPlayerModalById(parseInt(tr.getAttribute('data-pid'),10), {id:parseInt(tr.getAttribute('data-team-id'),10), name:tr.getAttribute('data-team-name'), logo:tr.getAttribute('data-team-logo')}, undefined, fx));
+  }
+  box.innerHTML = `<div class="lu-seg" style="margin-bottom:10px;display:flex">
+      <button data-sd="all" class="active">Tümü</button>
+      <button data-sd="h"><img loading="lazy" decoding="async" src="${fx.teams.home.logo}" alt="" onerror="this.remove()"><span>${esc(fx.teams.home.name)}</span></button>
+      <button data-sd="a"><img loading="lazy" decoding="async" src="${fx.teams.away.logo}" alt="" onerror="this.remove()"><span>${esc(fx.teams.away.name)}</span></button></div>
+    <div class="ptbl-wrap"></div>
+    <p style="font:500 11px var(--font-ui);color:var(--ink2);margin:8px 2px 0">Sütun başlığına dokunarak sırala · oyuncuya dokun → profil</p>`;
+  box.querySelectorAll('[data-sd]').forEach(b=> b.onclick = ()=>{ side = b.getAttribute('data-sd'); box.querySelectorAll('[data-sd]').forEach(x=> x.classList.toggle('active', x===b)); draw(); });
+  draw();
+}
+
+// ---------- H2H (aralarındaki maçlar + form) ----------
+async function renderH2HTab(fx, box){
+  box.innerHTML = '<div class="lgrp" style="padding:6px">'+'<div class="skel"></div>'.repeat(5)+'</div>';
+  const H = fx.teams.home, A = fx.teams.away;
+  try{
+    const [h2h, fh, fa] = await Promise.all([
+      apiFetch('/fixtures/headtohead', {h2h: H.id+'-'+A.id, last:10}, 'high').catch(()=>[]),
+      apiFetch('/fixtures', {team:H.id, last:5}, 'high').catch(()=>[]),
+      apiFetch('/fixtures', {team:A.id, last:5}, 'high').catch(()=>[])
+    ]);
+    const past = (h2h||[]).filter(f=>['FT','AET','PEN'].includes(f.fixture.status.short)).sort((a,b)=> new Date(b.fixture.date)-new Date(a.fixture.date));
+    let hw = 0, d = 0, aw = 0;
+    past.forEach(f=>{ const hg = f.teams.home.id===H.id ? f.goals.home : f.goals.away, ag = f.teams.home.id===H.id ? f.goals.away : f.goals.home; if(hg>ag) hw++; else if(hg<ag) aw++; else d++; });
+    const tot = (hw+d+aw)||1;
+    const formRow = (team, list)=>{
+      const fl = (list||[]).filter(f=>['FT','AET','PEN'].includes(f.fixture.status.short)).sort((a,b)=> new Date(a.fixture.date)-new Date(b.fixture.date));
+      return `<div class="h2f"><span><img loading="lazy" decoding="async" src="${team.logo}" alt="" onerror="this.remove()">${esc(team.name)}</span><div>${fl.map(f=>{ const r = fixtureResultForTeam(f, team.id); const opp = f.teams.home.id===team.id ? f.teams.away : f.teams.home; return `<span class="h2f-i" title="${esc(opp.name)} ${f.goals.home}-${f.goals.away}">${resultBadgeHtml(r)}<img loading="lazy" decoding="async" src="${opp.logo}" alt="" onerror="this.remove()"></span>`; }).join('') || '<small style="color:var(--ink2)">veri yok</small>'}</div></div>`;
+    };
+    const flags = await fixtureFlagSets();
+    box.innerHTML = `
+      <div class="sect-h">Son form</div>
+      <div class="lgrp" style="padding:4px 12px">${formRow(H, fh)}${formRow(A, fa)}</div>
+      <div class="sect-h">Aralarındaki son ${past.length} maç</div>
+      ${past.length ? `<div class="lgrp" style="padding:14px">
+        <div class="h2s"><div><b style="color:var(--home)">${hw}</b><span>${esc(H.name)}</span></div><div><b>${d}</b><span>Beraberlik</span></div><div><b style="color:var(--away)">${aw}</b><span>${esc(A.name)}</span></div></div>
+        <div class="h2bar"><i style="width:${hw/tot*100}%;background:var(--home)"></i><i style="width:${d/tot*100}%;background:var(--ink2);opacity:.45"></i><i style="width:${aw/tot*100}%;background:var(--away)"></i></div>
+      </div>
+      <div class="lgrp">${past.map(f=> sofaRowHtml(f, flags, null, `<small style="color:var(--ink2);font:500 10.5px var(--font-ui);text-align:center">${new Date(f.fixture.date).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'2-digit'})}</small>`).replace('class="sr ','class="sr wide ')).join('')}</div>` : '<div class="card empty"><p>Aralarında oynanmış maç bulunamadı.</p></div>'}`;
+    box.querySelectorAll('.sr[data-fx]').forEach(r=> r.onclick = ()=>{ const f = past.find(x=> String(x.fixture.id)===r.getAttribute('data-fx')); if(f) openFixtureModal(f); });
+  }catch(e){ box.innerHTML = `<div class="banner">H2H alınamadı: ${esc(e.message)}</div>`; }
+}
+function fxLazyPane(p, overlay, fx){
+  const el = overlay.querySelector(p==='players' ? '#fxPlayers' : p==='h2h' ? '#fxH2H' : null);
+  if(!el || el.getAttribute('data-loaded')) return;
+  el.setAttribute('data-loaded','1');
+  if(p==='players') renderPlayersTab(fx, el); else renderH2HTab(fx, el);
 }
 
 // ---------- init ----------

@@ -638,7 +638,7 @@ const localBackend = {
     }catch(e){ return {keys:[]}; }
   }
 };
-// ---------- BULUT SENKRON (Firestore, giriş YOK: cihazlar gizli bir 'eşleştirme kodu' ile aynı alanı paylaşır) ----------
+// ---------- BULUT SENKRON (Firebase: e-posta/şifre ile giriş + Firestore) ----------
 // Her kayıt (not, takip, ayar...) önce bu cihaza yazılır (hızlı), sonra arka planda buluta gönderilir.
 // Diğer cihazdaki değişiklikler anlık olarak gelir. En son yazan kazanır (kayıt bazında).
 window.firebaseConfig = window.firebaseConfig || null;
@@ -647,16 +647,6 @@ const SYNC_EXCLUDE = /^poshist_/;   // sadece onbellek - senkronlanmaz
 const SPACE_KEY = 'scoutdosyasi_space';
 const cloud = {space:null, user:null, db:null, unsub:null, meta:{}, pending:new Map(), timer:null, status:'off', err:'', firstSnap:false, loading:null};
 try{ cloud.meta = JSON.parse(localStorage.getItem(SYNC_META_KEY)||'{}') || {}; }catch(e){ cloud.meta = {}; }
-function newSpaceCode(){ const a = new Uint8Array(18); crypto.getRandomValues(a); return Array.from(a, b=>'abcdefghjkmnpqrstuvwxyz23456789'[b%31]).join(''); }
-function getSpace(){ try{ return localStorage.getItem(SPACE_KEY)||null; }catch(e){ return null; } }
-function setSpace(code){ try{ localStorage.setItem(SPACE_KEY, code); }catch(e){} cloud.space = code; }
-function spaceLink(){ const base = location.protocol==='https:' ? location.origin+location.pathname : 'https://celenks.github.io/Scout-Dosyas-/'; return base+'#esle='+cloud.space; }
-(function adoptFromHash(){
-  try{
-    const m = location.hash.match(/esle=([a-z0-9]{16,})/i);
-    if(m){ setSpace(m[1]); cloud.meta = {}; try{ localStorage.removeItem(SYNC_META_KEY); }catch(e){} history.replaceState(null,'',location.pathname); window.__justPaired = true; }
-  }catch(e){}
-})();
 function cloudConfigured(){ return !!(window.firebaseConfig && window.firebaseConfig.apiKey); }
 function saveSyncMeta(){ try{ localStorage.setItem(SYNC_META_KEY, JSON.stringify(cloud.meta)); }catch(e){} }
 function encSyncKey(k){ return encodeURIComponent(k).replace(/\./g,'%2E'); }
@@ -667,18 +657,18 @@ function setSyncStatus(s, err){
 function syncStatusHtml(){
   if(!cloudConfigured()) return '';
   const m = {off:['☁️','Senkron kapalı','var(--ink2)'], syncing:['🔄','Eşitleniyor…','var(--accent)'], ok:['✅','Senkron açık','var(--good)'], error:['⚠️','Senkron hatası','var(--bad)'], loading:['⏳','Bağlanıyor…','var(--ink2)']}[cloud.status] || ['☁️','',''];
-  return `<span style="color:${m[2]}">${m[0]} ${m[1]}</span>`;
+  return `<span style="color:${m[2]}">${m[0]} ${m[1]}${cloud.user? ' · '+esc(cloud.user.email||'') : ''}</span>`;
 }
 function cloudQueue(key, value){
   if(SYNC_EXCLUDE.test(key)) return;
   cloud.meta[key] = Date.now(); saveSyncMeta();
   cloud.pending.set(key, value);
-  if(cloud.db && cloud.space){ clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudFlush, 500); }
+  if(cloud.db && cloud.user){ clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudFlush, 500); }
 }
 async function cloudFlush(){
-  if(!cloud.space || !cloud.db || !cloud.pending.size) return;
+  if(!cloud.user || !cloud.db || !cloud.pending.size) return;
   const items = [...cloud.pending.entries()]; cloud.pending.clear();
-  const col = cloud.db.collection('spaces').doc(cloud.space).collection('kv');
+  const col = cloud.db.collection('users').doc(cloud.user.uid).collection('kv');
   setSyncStatus('syncing');
   for(let i=0;i<items.length;i+=400){
     const part = items.slice(i,i+400);
@@ -701,7 +691,7 @@ function onCloudChanged(){
   }, 400);
 }
 function cloudListen(){
-  const col = cloud.db.collection('spaces').doc(cloud.space).collection('kv');
+  const col = cloud.db.collection('users').doc(cloud.user.uid).collection('kv');
   cloud.firstSnap = false;
   cloud.unsub = col.onSnapshot(snap=>{
     let changed = false;
@@ -743,54 +733,57 @@ function initCloud(){
   cloud.loading = (async ()=>{
     try{
       if(typeof firebase==='undefined'){ await loadScriptOnce(base+'firebase-app-compat.js'); }
-      if(!firebase.firestore) await loadScriptOnce(base+'firebase-firestore-compat.js');
+      await Promise.all([ firebase.auth ? null : loadScriptOnce(base+'firebase-auth-compat.js'), firebase.firestore ? null : loadScriptOnce(base+'firebase-firestore-compat.js') ]);
       if(!firebase.apps.length) firebase.initializeApp(window.firebaseConfig);
       cloud.db = firebase.firestore();
       try{ await cloud.db.enablePersistence({synchronizeTabs:true}); }catch(e){}
-      if(!cloud.space){ cloud.space = getSpace(); if(!cloud.space){ setSpace(newSpaceCode()); } }
-      setSyncStatus('syncing'); cloudListen();
-      if(window.__justPaired){ window.__justPaired = false; setTimeout(()=> showToast('Bu cihaz bağlandı ✓ Veriler geliyor…'), 600); }
-      document.querySelectorAll('[data-cloudbox]').forEach(el=> renderCloudBox(el));
+      firebase.auth().onAuthStateChanged(u=>{
+        const prev = cloud.user && cloud.user.uid;
+        cloud.user = u;
+        if(cloud.unsub){ cloud.unsub(); cloud.unsub = null; }
+        if(u){ if(prev && prev!==u.uid){ cloud.meta = {}; saveSyncMeta(); } setSyncStatus('syncing'); cloudListen(); }
+        else setSyncStatus('off');
+        document.querySelectorAll('[data-cloudbox]').forEach(el=> renderCloudBox(el));
+      });
       return true;
     }catch(e){ setSyncStatus('error', e.message); return false; }
   })();
   return cloud.loading;
 }
+async function cloudSignIn(email, pass){
+  await initCloud();
+  if(typeof firebase==='undefined' || !firebase.auth) throw new Error('Firebase yüklenemedi (internet?)');
+  try{ await firebase.auth().signInWithEmailAndPassword(email, pass); }
+  catch(e){
+    const c = (e && e.code) || '';
+    if(/invalid-credential|wrong-password|user-not-found|invalid-login|invalid-email/.test(c)) throw new Error('E-posta ya da şifre yanlış.');
+    if(/too-many-requests/.test(c)) throw new Error('Çok fazla deneme — biraz bekle.');
+    if(/network/.test(c)) throw new Error('İnternet bağlantısı yok.');
+    throw new Error((e && e.message) || String(e));
+  }
+}
 function renderCloudBox(box){
   if(!box) return;
   if(!cloudConfigured()){ box.innerHTML = '<p style="font-size:12.5px;color:var(--ink2)">Bulut senkron bu sürümde ayarlı değil.</p>'; return; }
-  if(!cloud.space){ box.innerHTML = `<div data-syncstat style="font:700 13px var(--font-ui)">${syncStatusHtml()}</div>`; return; }
-  const link = spaceLink();
-  box.innerHTML = `
-    <div data-syncstat style="font:700 13px var(--font-ui)">${syncStatusHtml()}</div>
-    <p style="font-size:12.5px;color:var(--ink2);margin:8px 0 10px">Giriş yok. Bu cihaz gizli bir kodla buluta bağlı; aynı kodu kullanan her cihaz aynı notları, takipleri ve ayarları görür.${cloud.err? '<br><span style="color:var(--bad)">'+esc(cloud.err)+'</span>':''}</p>
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <div data-qr style="width:132px;height:132px;background:#fff;border-radius:14px;padding:8px;display:grid;place-items:center;font:600 11px var(--font-ui);color:#666">QR…</div>
-      <div style="flex:1;min-width:180px">
-        <b style="font-size:13.5px">📱 Telefonu bağla</b>
-        <p style="font-size:12px;color:var(--ink2);margin:4px 0 8px">Telefonun kamerasıyla QR'ı okut ya da linki telefona gönder (WhatsApp/AirDrop). Açılınca otomatik bağlanır.</p>
-        <button class="icon-btn" data-copylink>🔗 Bağlantı linkini kopyala</button>
-      </div>
-    </div>
-    <details style="margin-top:10px"><summary style="cursor:pointer;font:700 12px var(--font-ui);color:var(--ink2)">Kodu elle gir</summary>
-      <div style="display:flex;gap:6px;margin-top:8px"><input class="note-area" data-codein placeholder="Diğer cihazdaki kod" style="flex:1"><button class="icon-btn" data-codego>Bağla</button></div>
-      <p style="font-size:11px;color:var(--ink2);margin:6px 0 0">Bu cihazın kodu: <code style="user-select:all">${esc(cloud.space)}</code></p>
-    </details>`;
-  box.querySelector('[data-copylink]').onclick = async ()=>{ try{ await navigator.clipboard.writeText(link); showToast('Link kopyalandı — telefona gönder'); }catch(e){ prompt('Bu linki kopyala:', link); } };
-  box.querySelector('[data-codego]').onclick = ()=>{
-    const c = (box.querySelector('[data-codein]').value||'').trim().toLowerCase();
-    if(!/^[a-z0-9]{16,}$/.test(c)){ showToast('Kod geçersiz'); return; }
-    setSpace(c); cloud.meta = {}; saveSyncMeta(); if(cloud.unsub){ cloud.unsub(); cloud.unsub = null; } setSyncStatus('syncing'); cloudListen(); renderCloudBox(box); showToast('Bağlandı ✓');
+  if(cloud.user){
+    box.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><div data-syncstat style="font:700 13px var(--font-ui)">${syncStatusHtml()}</div><button class="icon-btn" data-cloudout>Çıkış yap</button></div>
+      <p style="font-size:12px;color:var(--ink2);margin:8px 0 0">Notların, takip ettiklerin, izlediklerin ve ayarların bu hesapla girdiğin her cihazda aynı.${cloud.err? '<br><span style="color:var(--bad)">'+esc(cloud.err)+'</span>':''}</p>`;
+    box.querySelector('[data-cloudout]').onclick = async ()=>{ try{ await firebase.auth().signOut(); }catch(e){} };
+    return;
+  }
+  box.innerHTML = `<p style="font-size:12.5px;color:var(--ink2);margin:0 0 8px">Telefon ve bilgisayarda aynı verileri görmek için Firebase'de oluşturduğun hesapla bir kere giriş yap.</p>
+    <input class="note-area" type="email" data-ce placeholder="E-posta" autocomplete="username" style="margin-bottom:8px">
+    <input class="note-area" type="password" data-cp placeholder="Şifre" autocomplete="current-password">
+    <div class="save-row"><button data-cin>Giriş yap</button><span data-cerr style="font:700 12px var(--font-ui);color:var(--bad)"></span></div>
+    <div data-syncstat style="font:700 12px var(--font-ui);margin-top:6px">${syncStatusHtml()}</div>`;
+  const go = async ()=>{
+    const b = box.querySelector('[data-cin]'), er = box.querySelector('[data-cerr]');
+    er.textContent = ''; b.textContent = 'Giriş yapılıyor…';
+    try{ await cloudSignIn(box.querySelector('[data-ce]').value.trim(), box.querySelector('[data-cp]').value); }
+    catch(e){ er.textContent = e.message; b.textContent = 'Giriş yap'; }
   };
-  const qrEl = box.querySelector('[data-qr]');
-  (async ()=>{
-    try{
-      if(typeof qrcode==='undefined') await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js');
-      const q = qrcode(0, 'M'); q.addData(link); q.make();
-      qrEl.innerHTML = q.createSvgTag({cellSize:3, margin:0, scalable:true});
-      const svg = qrEl.querySelector('svg'); if(svg){ svg.style.width='116px'; svg.style.height='116px'; }
-    }catch(e){ qrEl.textContent = 'QR yüklenemedi — linki kopyala'; }
-  })();
+  box.querySelector('[data-cin]').onclick = go;
+  box.querySelector('[data-cp]').addEventListener('keydown', e=>{ if(e.key==='Enter') go(); });
 }
 // yedekle / geri yukle (dosya ile tasima - ornegin bilgisayardaki eski dosya surumunden)
 function exportAllData(){
@@ -2094,10 +2087,10 @@ function renderSetup(){
       <input id="proxyInput" type="text" placeholder="(opsiyonel) CORS proxy adresin" style="margin-top:0;">
       <div id="setupErr" style="color:var(--bad); font-size:12.5px; min-height:16px;"></div>
       <button id="connectBtn">Bağlan</button>
-      ${cloudConfigured()? `<p style="margin-top:18px">📱 Daha önce bilgisayarda kullandıysan: bilgisayarda <b>Ayarlar → Bulut Senkron</b>'daki QR'ı bu telefonla okut — anahtarın ve notların otomatik gelir.</p>` : ''}
+      ${cloudConfigured()? `<div class="card" style="margin-top:22px;text-align:left"><h3 style="margin:0 0 6px">☁️ Hesabınla giriş yap</h3><p style="margin:0 0 10px">Başka cihazda kullandıysan giriş yap; anahtarın, notların ve takip ettiklerin otomatik gelir.</p><div data-cloudbox></div></div>` : ''}
     </div>
   `;
-  initCloud();
+  document.querySelectorAll('[data-cloudbox]').forEach(el=> renderCloudBox(el)); initCloud();
   document.getElementById('connectBtn').onclick = async ()=>{
     const val = document.getElementById('apiKeyInput').value.trim();
     const proxyVal = document.getElementById('proxyInput').value.trim();

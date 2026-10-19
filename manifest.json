@@ -1,0 +1,15 @@
+{
+  "name": "Scout Dosyası",
+  "short_name": "Scout",
+  "description": "Kişisel futbol scout defteri",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090C10",
+  "theme_color": "#0A1712",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

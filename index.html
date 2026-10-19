@@ -686,6 +686,7 @@ function onCloudChanged(){
     if(document.querySelector('.modal-overlay')){ window.__cloudDirty = true; return; }
     window.__cloudDirty = false;
     await loadSettings();
+    if(state.proxyBase && state.apiKey && !state.routeDirect && !window.__routeProbed){ try{ await probeDirectRoute(); }catch(e){} }
     if(state.view==='setup' && state.apiKey) state.view = 'home';
     const y = window.scrollY; render(); requestAnimationFrame(()=> window.scrollTo(0, y));
   }, 400);
@@ -976,7 +977,7 @@ async function loadSettings(){
     if(fp && fp.value){ state.followedPlayers = JSON.parse(fp.value); }
   }catch(e){}
 }
-async function saveSettings(){ try{ await store.set('settings', JSON.stringify({apiKey:state.apiKey, proxyBase:state.proxyBase, season:state.season})); }catch(e){} }
+async function saveSettings(){ window.__routeProbed = false; setTimeout(()=>{ if(state.proxyBase && state.apiKey && !state.routeDirect) probeDirectRoute(); }, 0); try{ await store.set('settings', JSON.stringify({apiKey:state.apiKey, proxyBase:state.proxyBase, season:state.season})); }catch(e){} }
 function apiBase(){ return (state.proxyBase && !state.routeDirect) ? state.proxyBase.replace(/\/$/,'') : API_HOST; }
 // Worker/proxy araciligi gereksiz yere yavaslatiyor ve 'too many requests' uretebiliyor (paylasimli Cloudflare IP'leri).
 // API dogrudan tarayicidan calisiyorsa proxy'yi otomatik atliyoruz.
@@ -991,6 +992,7 @@ async function probeDirectRoute(){
     state.routeDirect = !!ok;
   }catch(e){ state.routeDirect = false; }
   try{ localStorage.setItem('scoutdosyasi_route', state.routeDirect ? 'direct' : 'proxy'); }catch(e){}
+  window.__routeProbed = true;
 }
 async function saveFollowed(){ try{ await store.set('followed_teams', JSON.stringify(state.followed)); }catch(e){} }
 async function saveFollowedPlayers(){ try{ await store.set('followed_players', JSON.stringify(state.followedPlayers)); }catch(e){} }
@@ -1150,7 +1152,7 @@ function __rlCanStart(){
   // sunucu "bu dakika az hakkin kaldi" diyorsa yavasla (baska cihaz/sekme de kullaniyor olabilir)
   if(__apiQuota.min!==null && now - __apiQuota.t < 5000 && __apiQuota.min <= 3) return false;
   let lastSec = 0; for(let i=__rlStarts.length-1;i>=0 && now-__rlStarts[i]<1000;i--) lastSec++;
-  return lastSec < (__RL_PER_MIN>=250 ? 10 : __RL_PER_SEC);
+  return lastSec < Math.min(4, __RL_PER_SEC);
 }
 function __rlPending(){ return __rlQ.high.length + __rlQ.normal.length + __rlQ.low.length; }
 function __rlNext(){ return __rlQ.high.shift() || __rlQ.normal.shift() || __rlQ.low.shift(); }
@@ -1189,7 +1191,7 @@ function __rlTriggerBackoff(msg){
   if(m){ const n = parseInt(m[1],10); if(n>0 && n < __RL_PER_MIN){ __RL_PER_MIN = Math.max(1, n-1); __RL_PER_SEC = Math.min(__RL_PER_SEC, Math.max(1, Math.ceil(n/60)+1)); try{ localStorage.setItem('scoutdosyasi_rlmin', String(__RL_PER_MIN)); }catch(e){} } }
   const now = Date.now();
   const mine = __rlStarts.filter(t=> now - t < 60000).length + __rlForeign.length;
-  if(mine < __RL_PER_MIN*0.6) __rlExternalHits++;   // biz limite yakin degiliz ama sunucu "doldu" diyor -> anahtari baskasi da kullaniyor
+  if(mine < __RL_PER_MIN*0.6){ __rlExternalHits++; try{ if(state.proxyBase && !state.routeDirect) probeDirectRoute(); }catch(e){} }   // biz limite yakin degiliz ama sunucu "doldu" diyor -> anahtari baskasi da kullaniyor
   const oldest = __rlStarts.length ? __rlStarts[0] : now;
   const wait = mine >= __RL_PER_MIN ? (60000 - (now - oldest) + 300) : 4000;
   __rlPauseUntil = Math.max(__rlPauseUntil, now + Math.min(62000, Math.max(2500, wait)));

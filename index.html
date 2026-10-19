@@ -641,7 +641,7 @@ const localBackend = {
 // ---------- BULUT SENKRON (Firebase: e-posta/şifre ile giriş + Firestore) ----------
 // Her kayıt (not, takip, ayar...) önce bu cihaza yazılır (hızlı), sonra arka planda buluta gönderilir.
 // Diğer cihazdaki değişiklikler anlık olarak gelir. En son yazan kazanır (kayıt bazında).
-window.firebaseConfig = window.firebaseConfig || null;
+window.firebaseConfig = window.firebaseConfig || {"apiKey":"AIzaSyDpJGGro4tWmvkVZ8ekkT6d871QEBOUQlE","authDomain":"scout-dosyasi.firebaseapp.com","projectId":"scout-dosyasi","storageBucket":"scout-dosyasi.firebasestorage.app","messagingSenderId":"440814423344","appId":"1:440814423344:web:2867480656410a8997ccf5"};
 const SYNC_META_KEY = 'scoutdosyasi_syncmeta';
 const SYNC_EXCLUDE = /^poshist_/;   // sadece onbellek - senkronlanmaz
 const SPACE_KEY = 'scoutdosyasi_space';

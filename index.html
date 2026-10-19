@@ -15,8 +15,8 @@
 <meta name="theme-color" content="#DDEFEA">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230E2A1C'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%23D8A63A' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%23D8A63A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Anton&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<script>try{var _t=localStorage.getItem("scoutdosyasi_theme");if(_t==="light"||_t==="dark")document.documentElement.setAttribute("data-theme",_t)}catch(e){}</script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=Anton&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script>try{var _t=localStorage.getItem("scoutdosyasi_theme")||"dark";if(_t==="light"||_t==="dark")document.documentElement.setAttribute("data-theme",_t)}catch(e){}</script>
 <style>
 :root{
   --bg:#F2F4F7; --bg2:#E9EDF2; --surface:#FFFFFF; --ink:#0F1720; --ink2:#667085; --line:#E4E7EC;
@@ -916,6 +916,256 @@ table.standings td.fm{white-space:nowrap}
 table.standings td.team{display:table-cell;white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 table.standings td.team img{vertical-align:middle;margin-right:8px}
 table.standings tr.mine td.rank,table.standings tr.mine td{background:var(--sel)}
+
+/* ================= v5: modern koyu tasarım (Sofascore'dan esinli, daha rafine) ================= */
+:root{
+  --font-ui:"Barlow","Inter","Helvetica Neue",Arial,sans-serif; --font-head:"Barlow Semi Condensed","Barlow",sans-serif; --font-num:"Barlow Semi Condensed","Barlow",sans-serif;
+  --bg:#EEF0F5; --bg2:#EEF0F5; --surface:#FFFFFF; --soft:#F1F3F8; --soft2:#F6F7FA; --line:#E3E6EE; --ink:#16171C; --ink2:#6E7384;
+  --accent:#3B4BF2; --sel:#E8EAFF; --home:#3B4BF2; --away:#0FB5A6; --live:#E5383B;
+  --bar:#16171C; --bar-ink:#F3F4F8; --hero1:#1F2130; --hero2:#16171C;
+  --pitch-a:#2E8B4E; --pitch-b:#2A8248; --pitch-ln:rgba(255,255,255,.38);
+  --radius:16px; --shadow:0 1px 2px rgba(16,24,40,.05),0 0 0 1px rgba(16,24,40,.04);
+}
+:root[data-theme="dark"]{
+  --bg:#0D0E12; --bg2:#0D0E12; --surface:#191A20; --soft:#22232B; --soft2:#1E1F26; --line:#2A2B33; --ink:#F1F2F6; --ink2:#9297A6;
+  --accent:#7B85FF; --sel:#262947; --home:#6E7BFF; --away:#2DD4BF; --live:#FF5A5F; --good:#2BD07A; --bad:#FF6B6B;
+  --bar:#15161B; --bar-ink:#F1F2F6; --hero1:#20222C; --hero2:#15161B;
+  --pitch-a:#1B2A22; --pitch-b:#19271F; --pitch-ln:rgba(255,255,255,.13);
+  --shadow:0 0 0 1px rgba(255,255,255,.04); --shadow-lg:0 8px 30px rgba(0,0,0,.5);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D0E12; --bg2:#0D0E12; --surface:#191A20; --soft:#22232B; --soft2:#1E1F26; --line:#2A2B33; --ink:#F1F2F6; --ink2:#9297A6;
+  --accent:#7B85FF; --sel:#262947; --home:#6E7BFF; --away:#2DD4BF; --live:#FF5A5F; --good:#2BD07A; --bad:#FF6B6B;
+  --bar:#15161B; --bar-ink:#F1F2F6; --hero1:#20222C; --hero2:#15161B;
+  --pitch-a:#1B2A22; --pitch-b:#19271F; --pitch-ln:rgba(255,255,255,.13);
+  --shadow:0 0 0 1px rgba(255,255,255,.04); --shadow-lg:0 8px 30px rgba(0,0,0,.5);
+}}
+body{font-family:var(--font-ui);font-size:15px;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"lnum" 1}
+/* app bar */
+.appbar{background:var(--bar);box-shadow:0 1px 0 var(--line)}
+.ab-logo{font:800 20px var(--font-head);letter-spacing:-.01em}
+.ab-logo .lg{background:var(--accent)!important;border-radius:10px}
+.ab-nav button{font:600 15px var(--font-ui);text-transform:uppercase;letter-spacing:.02em;font-size:13.5px}
+.ab-nav button.active{border-bottom-color:var(--accent)}
+.daystrip button{font:600 12px var(--font-ui)}
+.daystrip button.active{background:var(--sel)!important;color:var(--accent)!important;opacity:1}
+.bnav{background:var(--surface);box-shadow:0 -1px 0 var(--line)}
+.bnav button{font:600 11px var(--font-ui)}
+/* kartlar */
+.lgrp,.evt,.st2-grp,.info-card,.bench2,.card{border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;border:0!important;background:var(--surface)}
+/* lig başlığı */
+.lgrp-h{padding:12px 14px;gap:12px}
+.lgrp-h .lgl,.lgrp-h>img{width:32px;height:32px}
+.lgrp-h .lgl img{width:28px;height:28px}
+.lgrp-h b{font:700 15px var(--font-ui)}
+.lgrp-h small{font:500 12.5px var(--font-ui);color:var(--ink2)}
+.lgrp-h .cnt{min-width:26px;height:24px;padding:0 8px;border-radius:99px;background:var(--soft);display:inline-grid;place-items:center;font:700 12px var(--font-ui)}
+.lgrp-h .cnt.live{background:color-mix(in srgb,var(--live) 14%,transparent)}
+.lgrp-h .chev{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:15px}
+.lg-tbl{font:600 12px var(--font-ui);border-radius:99px}
+/* maç satırı */
+.sr{grid-template-columns:56px 1fr auto 30px;padding:10px 14px;min-height:62px}
+.sr+.sr{border-top:1px solid var(--line)}
+.sr:hover{background:var(--soft2)}
+.sr .st{font:500 13px var(--font-ui)}
+.sr .st b{font:600 13px var(--font-ui)}
+.sr .tms{border-left:0;padding-left:4px}
+.sr .tm{font:500 15.5px/1.55 var(--font-ui);gap:10px}
+.sr .tm img{width:20px;height:20px}
+.sr .tm.w{font-weight:700}
+.sr .scs{font:700 16px/1.55 var(--font-num);min-width:22px}
+.sr.mine .tms{border-left:0}
+.sr.mine{box-shadow:inset 3px 0 0 var(--accent)}
+.sr.is-live{background:linear-gradient(90deg,color-mix(in srgb,var(--live) 7%,transparent),transparent 45%)}
+/* sekmeler */
+.fxtabs,.subtabs{background:var(--surface);border-bottom:1px solid var(--line)}
+.fxtabs button,.subtabs button{font:600 15px var(--font-ui);color:var(--ink2);padding:13px 12px;border-bottom:2px solid transparent}
+.fxtabs button.active,.subtabs button.active{color:var(--ink);border-bottom-color:var(--accent)}
+/* maç başlığı */
+.fxh{background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--accent) 30%,var(--hero1)) 0%,var(--hero2) 70%)!important;color:#fff}
+.fxh-sc{font:800 44px/1 var(--font-num)!important;letter-spacing:.02em}
+.fxh-tm b{font:700 15px var(--font-ui)!important}
+.fxh-tm .lg{background:rgba(255,255,255,.96)!important}
+.chip-btn{border:0;background:var(--soft);color:var(--ink);font:600 13px var(--font-ui);border-radius:99px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.chip-btn:hover{background:var(--sel);color:var(--accent)}
+.chip-btn.on{background:var(--accent);color:#fff}
+.rchip{font:700 12px var(--font-num)!important;border-radius:6px!important}
+
+/* ---------- KADRO ---------- */
+.lu5-tools{display:flex;align-items:center;gap:6px;margin:0 0 10px}
+.lu5-tag{font:600 12px var(--font-ui);color:var(--ink2);background:var(--soft);border-radius:99px;padding:5px 10px}
+.lu5-tag.ok{color:var(--good,#18B85C);background:color-mix(in srgb,#18B85C 14%,transparent)}
+.lu5{border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.lu5-h{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface)}
+.lu5-h img{width:30px;height:30px;object-fit:contain}
+.lu5-h .t{flex:1;min-width:0;line-height:1.2}
+.lu5-h b{display:block;font:700 16px var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lu5-h small{font:500 12.5px var(--font-ui);color:var(--ink2)}
+.lu5-h .avg{display:flex;align-items:center;gap:6px;font:700 18px var(--font-num)}
+.lu5-h .avg i{width:12px;height:12px;border-radius:3px}
+.lu5-wrap{display:grid;gap:12px;margin:0 auto 4px;max-width:560px}
+.lu5-h{border-bottom:1px solid var(--line)}
+.lu5-h.home .avg,.lu5-h.away .avg{margin-left:auto}
+.lu5-h.home{box-shadow:inset 3px 0 0 var(--home)}.lu5-h.away{box-shadow:inset 3px 0 0 var(--away)}
+.pitch5{position:relative;width:100%;aspect-ratio:68/80;background:repeating-linear-gradient(180deg,var(--pitch-a) 0 10%,var(--pitch-b) 10% 20%);margin:0 auto;overflow:hidden}
+.pitch5 .ln{position:absolute;border:1.5px solid var(--pitch-ln);pointer-events:none}
+.pitch5 .p-mid{left:0;right:0;bottom:2px;height:0;border-width:1.5px 0 0}
+.pitch5 .p-c{left:50%;bottom:2px;width:30%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,50%)}
+.pitch5 .ln.p-t1{top:0;height:17%}.pitch5 .ln.p-t2{top:0;height:6.5%}.pitch5 .ln.p-ta{top:17%;height:4%}
+.pitch5 .p-dot{left:50%;top:50%;width:6px;height:6px;border-radius:50%;background:var(--pitch-ln);border:0;transform:translate(-50%,-50%)}
+.pitch5 .p-t1{left:21%;right:21%;top:0;height:14%;border-top:0}.pitch5 .p-t2{left:37%;right:37%;top:0;height:5%;border-top:0}
+.pitch5 .p-ta{left:41%;right:41%;top:14%;height:3.2%;border-top:0;border-radius:0 0 999px 999px}
+.pitch5 .p-b1{left:21%;right:21%;bottom:0;height:14%;border-bottom:0}.pitch5 .p-b2{left:37%;right:37%;bottom:0;height:5%;border-bottom:0}
+.pitch5 .p-ba{left:41%;right:41%;bottom:14%;height:3.2%;border-bottom:0;border-radius:999px 999px 0 0}
+.pl5{position:absolute;transform:translate(-50%,-50%);width:84px;display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:2;transition:transform .15s}
+.pl5:hover{transform:translate(-50%,-50%) scale(1.06);z-index:3}
+.pl5 .ph{position:relative;width:46px;height:46px}
+.pl5 .av{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#E9EBF0;display:grid;place-items:center;font:700 15px var(--font-num);color:#16171C;box-shadow:0 0 0 2px rgba(255,255,255,.9),0 4px 10px rgba(0,0,0,.35)}
+.pl5 .av img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pl5.motm .av{box-shadow:0 0 0 2px #3D5AFE,0 0 0 4px rgba(61,90,254,.35),0 4px 14px rgba(61,90,254,.5)}
+.pl5 .rt{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font:700 11.5px/1 var(--font-num);color:#fff;border-radius:5px;padding:3px 5px;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.pl5 .tr{position:absolute;right:-12px;top:-6px;display:flex;gap:1px}
+.pl5 .bd{position:relative;display:inline-flex}
+.pl5 .bd em{position:absolute;right:-4px;bottom:-4px;font:800 9px/1 var(--font-num);font-style:normal;background:#16171C;color:#fff;border-radius:99px;padding:1px 3px}
+.pl5 .tl{position:absolute;left:-4px;top:-3px}
+.pl5 .bl{position:absolute;left:-16px;bottom:2px}
+.pl5 .sb{display:inline-flex;align-items:center;gap:1px;background:rgba(0,0,0,.6);border-radius:99px;padding:1px 4px 1px 1px}
+.pl5 .sb em{font:700 9.5px var(--font-num);font-style:normal;color:#fff}
+.pl5 .cap{position:absolute;right:-5px;bottom:-1px;width:15px;height:15px;border-radius:50%;background:#F5B400;color:#16171C;font:800 9px/15px var(--font-num);text-align:center}
+.pl5 .nm{margin-top:11px;max-width:84px;font:600 12px var(--font-ui);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl5 .nm em{font-style:normal;opacity:.65;margin-right:3px;font-weight:500}
+.ic-ball,.ic-sub,.ic-ast{width:15px;height:15px;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.ic-card{display:inline-block;width:9px;height:12px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.ic-card.y{background:#F5C518}.ic-card.r{background:#E5383B}
+.ic-card.y2{background:linear-gradient(135deg,#F5C518 50%,#E5383B 50%)}
+.pl5 .mp-note-btn{position:absolute;left:-10px;top:-8px;width:20px;height:20px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:11px;display:none;place-items:center;padding:0}
+.notes-on .pl5 .mp-note-btn,.pl5 .mp-note-btn.has{display:grid}
+.pl5 .mp-note-btn.has{background:#F5B400;color:#16171C}
+@media (max-width:420px){ .pl5{width:66px} .pl5 .nm{max-width:66px;font-size:10.5px} .pl5 .ph,.pl5 .av{width:38px;height:38px} .pl5 .rt{font-size:10.5px;padding:2px 4px} }
+.lu5-leg{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 4px;font:500 12px var(--font-ui);color:var(--ink2)}
+.lu5-leg span{display:inline-flex;align-items:center;gap:5px}
+.lu5-leg .ic-ball,.lu5-leg .ic-sub,.lu5-leg .ic-ast{width:13px;height:13px}
+.lu5-leg .rtk{width:12px;height:12px;border-radius:3px;display:inline-block}
+.lu5-leg .motm-k{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 2px #3D5AFE;display:inline-block}
+.bench5{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:620px){ .bench5{grid-template-columns:1fr} }
+.bn5{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:4px 0 6px;overflow:hidden}
+.bn5-h{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.bn5-h img{width:22px;height:22px;object-fit:contain}
+.bn5-h b{font:700 15px var(--font-ui)}
+.bn5-t{font:700 11.5px var(--font-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:8px 14px 4px}
+.bn5 .bn-row{display:flex;align-items:center;gap:10px;padding:8px 14px;border:0;border-radius:0;background:none;cursor:pointer}
+.bn5 .bn-row:hover{background:var(--soft2)}
+.bn5 .bn-row .av{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--soft);display:grid;place-items:center;font:700 13px var(--font-num);flex:none}
+.bn5 .bn-row .av img{width:100%;height:100%;object-fit:cover;object-position:top}
+.bn5 .bn-row .n{flex:1;min-width:0;line-height:1.25}
+.bn5 .bn-row .n b{display:block;font:600 14.5px var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bn5 .bn-row .n small{font:500 12px var(--font-ui);color:var(--ink2)}
+.bn5 .bn-row .bx{display:flex;align-items:center;gap:4px}
+.bn5 .bn-row .bx em{font:700 11px var(--font-num);font-style:normal}
+.bn5 .bn-row .in{display:inline-flex;align-items:center;gap:3px;font:600 12px var(--font-num);color:var(--good,#18B85C)}
+.bn5 .bn-row .in .ic-sub{width:13px;height:13px}
+.bn5 .bn-row .rt{font:700 12px/1 var(--font-num);color:#fff;border-radius:5px;padding:4px 6px;min-width:30px;text-align:center}
+.bn5 .bn-row .mp-note-btn{display:none;width:24px;height:24px;border-radius:50%;border:0;background:var(--soft);color:var(--ink2)}
+.notes-on .bn5 .bn-row .mp-note-btn,.bn5 .bn-row .mp-note-btn.has{display:grid;place-items:center}
+.bn5 .bn-row .mp-note-btn.has{background:#F5B400;color:#16171C}
+.bn5 .bn-row:not(.played) .n b{opacity:.85}
+
+/* ---------- İSTATİSTİK ---------- */
+.s5{display:flex;flex-direction:column;gap:12px}
+.s5-teams{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:2px 2px}
+.s5-teams span{display:flex;align-items:center;gap:8px;min-width:0}
+.s5-teams b{font:700 15px var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s5-teams img{width:24px;height:24px;object-fit:contain}
+.s5-teams .h b{color:var(--home)}.s5-teams .a b{color:var(--away)}
+.s5-hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.s5-k{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.s5-k>span{font:600 12.5px var(--font-ui);color:var(--ink2)}
+.s5-k .pr{display:flex;justify-content:space-between;width:100%;font:600 12px var(--font-num);color:var(--ink2)}
+.s5-k .pr i{font-style:normal}.s5-k .pr .h{color:var(--home)}.s5-k .pr .a{color:var(--away)}
+.s5-k .ringw{position:relative;width:76px;height:76px}
+.s5-ring{width:76px;height:76px;transform:rotate(-90deg)}
+.s5-ring circle{fill:none;stroke-width:8}
+.s5-ring .tr{stroke:var(--soft)}.s5-ring .aw{stroke:var(--away)}.s5-ring .hm{stroke:var(--home);stroke-linecap:butt}
+.s5-k .ringw b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 22px var(--font-num)}
+.s5-k .ringw b small{font-size:12px;margin-left:1px}
+.s5-k .dual{display:flex;align-items:baseline;gap:8px;font:800 34px/1.1 var(--font-num);padding:8px 0 4px}
+.s5-k .dual .h{color:var(--home)}.s5-k .dual .a{color:var(--away)}.s5-k .dual em{font-style:normal;color:var(--ink2);font-size:22px}
+.s5-grp{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:4px 16px 8px}
+.s5-grp h5{margin:12px 0 4px;font:700 15px var(--font-ui);color:var(--ink);text-transform:none;letter-spacing:0;text-align:left}
+.s5-row{padding:10px 0 9px}
+.s5-row+.s5-row{border-top:1px solid var(--line)}
+.s5-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.s5-top .l{text-align:center;font:500 14.5px var(--font-ui);color:var(--ink)}
+.s5-v{font:700 15px/1 var(--font-num);min-width:38px;text-align:center;padding:5px 9px;border-radius:8px;color:var(--ink)}
+.s5-v.h.win{background:var(--home);color:#fff}.s5-v.a.win{background:var(--away);color:#06231F}
+:root[data-theme="dark"] .s5-v.a.win{color:#062B26}
+.s5-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.s5-bars>div{height:6px;border-radius:99px;background:var(--soft);overflow:hidden;display:flex}
+.s5-bars .h{justify-content:flex-end}
+.s5-bars i{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.s5-bars .h i{background:color-mix(in srgb,var(--home) 45%,transparent)}.s5-bars .a i{background:color-mix(in srgb,var(--away) 45%,transparent)}
+.s5-bars .h i.win{background:var(--home)}.s5-bars .a i.win{background:var(--away)}
+
+/* önemli istatistik / akış kartları uyum */
+.kst,.flow{border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;border:0!important}
+
+/* ---------- LİG LİDERLERİ ---------- */
+.ld5{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.ld5-h{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
+.ld5-h>div{flex:1;min-width:0;line-height:1.2}
+.ld5-h b{display:block;font:700 18px var(--font-head)}
+.ld5-h small{font:500 12.5px var(--font-ui);color:var(--ink2)}
+.ld5-tabs{display:flex;gap:6px;padding:4px 16px 12px;overflow-x:auto;scrollbar-width:none}
+.ld5-tabs::-webkit-scrollbar{display:none}
+.ld5-tabs button{flex:none;border:0;background:var(--soft);color:var(--ink2);font:600 13.5px var(--font-ui);border-radius:99px;padding:8px 14px;cursor:pointer}
+.ld5-tabs button.on{background:var(--ink);color:var(--surface)}
+.ld5-pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;padding:6px 12px 14px}
+.ld5-pod .pd{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:14px 6px 12px;border-radius:14px;background:var(--soft2);cursor:pointer;min-width:0;position:relative;transition:transform .15s}
+.ld5-pod .pd:hover{transform:translateY(-2px)}
+.ld5-pod .pd.r1{background:linear-gradient(180deg,color-mix(in srgb,#F5B400 22%,var(--surface)),var(--soft2));padding-top:18px}
+.ld5-pod .pd.r2{background:linear-gradient(180deg,color-mix(in srgb,#A9B1C2 22%,var(--surface)),var(--soft2))}
+.ld5-pod .pd.r3{background:linear-gradient(180deg,color-mix(in srgb,#CD7F32 22%,var(--surface)),var(--soft2))}
+.ld5-pod .ph{position:relative;width:58px;height:58px}
+.ld5-pod .pd.r1 .ph{width:72px;height:72px}
+.ld5-pod .ph img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:top;background:var(--soft);box-shadow:0 0 0 3px var(--surface)}
+.ld5-pod .md{position:absolute;right:-4px;bottom:-2px;width:22px;height:22px;border-radius:50%;font:800 12px/22px var(--font-num);font-style:normal;color:#16171C;box-shadow:0 0 0 2px var(--surface)}
+.ld5-pod .r1 .md{background:#F5B400}.ld5-pod .r2 .md{background:#C3CAD6}.ld5-pod .r3 .md{background:#D99355}
+.ld5-pod b{font:700 14px var(--font-ui);margin-top:6px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ld5-pod small{display:flex;align-items:center;gap:4px;font:500 11.5px var(--font-ui);color:var(--ink2);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ld5-pod small img{width:14px;height:14px;object-fit:contain}
+.ld5-pod .big{font:800 30px/1 var(--font-num);margin-top:6px}
+.ld5-pod .r1 .big{font-size:38px}
+.ld5-pod .big em{font:600 12px var(--font-ui);font-style:normal;color:var(--ink2);margin-left:3px}
+.ld5-pod .mini{font:500 11px var(--font-ui);color:var(--ink2)}
+.ld-row{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;border-top:1px solid var(--line)}
+.ld-row:hover{background:var(--soft2)}
+.ld-row .rk{width:22px;text-align:center;font:700 15px var(--font-num);color:var(--ink2);flex:none}
+.ld-row .rk.r1{color:#D9A000}.ld-row .rk.r2{color:#9AA3B2}.ld-row .rk.r3{color:#C77B3A}
+.ld-row .ph{width:40px;height:40px;flex:none}
+.ld-row .ph img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top;background:var(--soft)}
+.ld-row .n{flex:1;min-width:0;line-height:1.25}
+.ld-row .n b{display:block;font:600 15px var(--font-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ld-row .n small{display:flex;align-items:center;gap:5px;font:500 12.5px var(--font-ui);color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ld-row .n small img{width:15px;height:15px;object-fit:contain;cursor:pointer}
+.ld-row .bar{display:block;height:4px;border-radius:99px;background:var(--soft);margin-top:6px;overflow:hidden}
+.ld-row .bar i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.ld-row .v{display:flex;flex-direction:column;align-items:flex-end;font:800 22px/1 var(--font-num);min-width:44px}
+.ld-row .v small{font:500 11px var(--font-ui);color:var(--ink2);margin-top:3px}
+.ld5-more{display:block;width:calc(100% - 32px);margin:8px 16px 14px;border:0;border-radius:12px;background:var(--soft);color:var(--ink);font:600 14px var(--font-ui);padding:11px;cursor:pointer}
+.ld5-empty{padding:24px 16px;text-align:center;color:var(--ink2);font:500 14px var(--font-ui)}
+#ldLegacy{padding:0 12px 12px}
+#ldLegacy .card{background:var(--soft2)!important;padding:12px 14px}
+#ldLegacy h3{font:700 15px var(--font-ui)!important;color:var(--ink)!important}
+#ldLegacy p{color:var(--ink2)!important}
+#ldLegacy .ld-row{padding:9px 4px}
+
+/* puan tablosu */
+table.standings{font-family:var(--font-ui)}
+table.standings th{font:600 12px var(--font-ui);color:var(--ink2)}
+table.standings td{font:500 14px var(--font-num)}
+table.standings td.team{font:600 14.5px var(--font-ui)}
+@media (max-width:520px){ .s5-k{padding:12px 8px 10px} .s5-k .ringw,.s5-ring{width:64px;height:64px} .s5-k .ringw b{font-size:19px} .s5-k .dual{font-size:27px;gap:5px;padding:12px 0 8px} .s5-k .dual em{font-size:18px} .s5-k>span{font-size:11.5px;line-height:1.2} .s5-k .pr{font-size:11px} }
 
 body:has(.modal-overlay){overflow:hidden}
 </style>
@@ -7459,7 +7709,7 @@ function wireShowMore(box2, renderFn, fullList, initialCount){
   draw();
 }
 
-async function loadLeaderboards(league, season, standingGroups, box){
+async function __loadLeaderboardsOld(league, season, standingGroups, box){
   if(!box) return;
   box.innerHTML = `
     <div style="display:flex; gap:14px; flex-wrap:wrap;">
@@ -8671,6 +8921,292 @@ function fxLazyPane(p, overlay, fx){
   if(!el || el.getAttribute('data-loaded')) return;
   el.setAttribute('data-loaded','1');
   if(p==='players') renderPlayersTab(fx, el); else renderH2HTab(fx, el);
+}
+
+// ================= v5: koyu "stadyum gecesi" tasarımı — kadro sahası + istatistikler =================
+function getTheme(){ try{ return localStorage.getItem(THEME_KEY) || 'dark'; }catch(e){ return 'dark'; } }
+function applyTheme(t){
+  const r = document.documentElement;
+  if(t==='light' || t==='dark') r.setAttribute('data-theme', t); else r.removeAttribute('data-theme');
+  try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
+  const dark = t==='dark' || (t==='system' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  const m = document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', dark ? '#15161B' : '#2B3AE0');
+}
+function matchRatingColor(v){
+  v = parseFloat(v);
+  if(isNaN(v)) return '#7C818E';
+  if(v>=9) return '#3D5AFE';
+  if(v>=8) return '#00B4D8';
+  if(v>=7) return '#18B85C';
+  if(v>=6.5) return '#D4B000';
+  if(v>=6) return '#F08A24';
+  return '#E5383B';
+}
+function ratingChip(v){ v = parseFloat(v); return isNaN(v) ? '' : `<span class="rchip" style="background:${matchRatingColor(v)}">${v.toFixed(1)}</span>`; }
+
+// küçük SVG ikonlar (emoji yerine — her ekranda aynı, net)
+const IC = {
+  ball: `<svg viewBox="0 0 16 16" class="ic-ball"><circle cx="8" cy="8" r="7.2" fill="#fff" stroke="#16171C" stroke-width="1.2"/><path d="M8 4.6l2.9 2.1-1.1 3.4H6.2L5.1 6.7z" fill="#16171C"/><path d="M8 4.6V1.2M10.9 6.7l3.1-1.2M9.8 10.1l2 2.8M6.2 10.1l-2 2.8M5.1 6.7L2 5.5" stroke="#16171C" stroke-width="1"/></svg>`,
+  og: `<svg viewBox="0 0 16 16" class="ic-ball"><circle cx="8" cy="8" r="7.2" fill="#E5383B" stroke="#fff" stroke-width="1.2"/><path d="M8 4.6l2.9 2.1-1.1 3.4H6.2L5.1 6.7z" fill="#fff"/></svg>`,
+  yc: `<i class="ic-card y"></i>`, rc: `<i class="ic-card r"></i>`, yrc: `<i class="ic-card y2"></i>`,
+  out: `<svg viewBox="0 0 16 16" class="ic-sub"><circle cx="8" cy="8" r="8" fill="#E5383B"/><path d="M8 4v8M4.8 8.8L8 12l3.2-3.2" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  inn: `<svg viewBox="0 0 16 16" class="ic-sub"><circle cx="8" cy="8" r="8" fill="#18B85C"/><path d="M8 12V4M4.8 7.2L8 4l3.2 3.2" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  ast: `<svg viewBox="0 0 16 16" class="ic-ast"><circle cx="8" cy="8" r="8" fill="#fff"/><path d="M5 11.5L8 4.5l3 7M6.1 9h3.8" stroke="#16171C" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+};
+function shortName(n){
+  n = String(n||'').trim(); if(!n) return '';
+  const parts = n.split(/\s+/);
+  if(parts.length===1 || n.length<=13) return n;
+  if(/^[A-ZÇĞİÖŞÜ]\.$/.test(parts[0])) return parts[0]+' '+parts.slice(-1)[0];
+  return parts[0][0]+'. '+parts.slice(-1)[0];
+}
+
+// ---------- KADROLAR ----------
+async function renderLineupsFull(lineups, events, lineupsBox, fx, overlay, loadMatchDetailsRef){
+  let statsMap = {};
+  try{
+    const ps = await apiFetch('/fixtures/players', {fixture:fx.fixture.id}, 'high');
+    (ps||[]).forEach(tb=> (tb.players||[]).forEach(p=>{ const s = (p.statistics && p.statistics[0]) || {}; statsMap[p.player.id] = {...s, photo:p.player.photo}; }));
+  }catch(e){}
+  const subOut = {}, subIn = {}, gl = {}, as = {}, og = {}, yc = {}, rc = {};
+  const xi = new Set(); (lineups||[]).forEach(l=> (l.startXI||[]).forEach(x=> x.player && xi.add(x.player.id)));
+  (events||[]).forEach(ev=>{
+    const pid = ev.player && ev.player.id;
+    if(ev.type==='Goal'){
+      if(ev.detail==='Own Goal'){ if(pid) og[pid] = (og[pid]||0)+1; }
+      else if(ev.detail!=='Missed Penalty'){ if(pid) gl[pid] = (gl[pid]||0)+1; if(ev.assist && ev.assist.id) as[ev.assist.id] = (as[ev.assist.id]||0)+1; }
+    }
+    if(ev.type==='Card' && pid){ if(/Yellow/.test(ev.detail)) yc[pid] = (yc[pid]||0)+1; else rc[pid] = 1; }
+    if(ev.type==='subst'){ const m = ev.time && ev.time.elapsed; [ev.player, ev.assist].forEach(pl=>{ if(!pl || !pl.id) return; if(xi.has(pl.id)) subOut[pl.id] = m; else subIn[pl.id] = m; }); }
+  });
+  const homeL = lineups.find(l=> l.team.id===fx.teams.home.id) || lineups[0];
+  const awayL = lineups.find(l=> l !== homeL) || null;
+  const rOf = (id)=>{ const s = statsMap[id]; return s && s.games && s.games.rating ? parseFloat(s.games.rating) : null; };
+  const avg = (l)=>{ const r = (l.startXI||[]).map(x=> rOf(x.player.id)).filter(v=>v); return r.length ? r.reduce((a,b)=>a+b,0)/r.length : null; };
+  // maçın oyuncusu (en yüksek reyting)
+  let motm = null, motmR = 0; Object.keys(statsMap).forEach(id=>{ const r = rOf(id); if(r && r>motmR){ motmR = r; motm = parseInt(id,10); } });
+  const teamBar = (l, side)=> l ? `<div class="lu5-h ${side}"><img loading="lazy" decoding="async" src="${l.team.logo}" alt="" onerror="this.style.visibility='hidden'"><div class="t"><b>${esc(l.team.name)}</b><small>${esc(l.formation||'')}${l.coach&&l.coach.name? ' · '+esc(l.coach.name):''}</small></div>${avg(l)? `<span class="avg" title="İlk 11 ortalama reyting"><i style="background:${matchRatingColor(avg(l))}"></i>${avg(l).toFixed(2)}</span>`:''}</div>` : '';
+  const badges = (pid)=>{
+    const st = statsMap[pid] || {}; const goals = st.goals || {}, cards = st.cards || {};
+    const g = Math.max(goals.total||0, gl[pid]||0), a = Math.max(goals.assists||0, as[pid]||0);
+    let tr = '', tl = '', bl = '';
+    if(g) tr += `<span class="bd">${IC.ball}${g>1?`<em>${g}</em>`:''}</span>`;
+    if(og[pid]) tr += `<span class="bd">${IC.og}</span>`;
+    if(a) tr += `<span class="bd">${IC.ast}${a>1?`<em>${a}</em>`:''}</span>`;
+    if(rc[pid] || cards.red) tl = IC.rc; else if((yc[pid]||0)>=2) tl = IC.yrc; else if(yc[pid] || cards.yellow) tl = IC.yc;
+    if(subOut[pid]!==undefined) bl = `<span class="sb">${IC.out}<em>${subOut[pid]}'</em></span>`;
+    if(subIn[pid]!==undefined) bl = `<span class="sb">${IC.inn}<em>${subIn[pid]}'</em></span>`;
+    return {tr, tl, bl};
+  };
+  const node = (p, l, side, x, y, r, maxRow, i, count)=>{
+    const st = statsMap[p.id] || {}; const rt = rOf(p.id); const b = badges(p.id);
+    const cap = st.games && st.games.captain;
+    return `<div class="pl5 ${side} lineup-slot-click ${p.id===motm?'motm':''}" data-pid="${p.id}" data-team-id="${l.team.id}" data-team-name="${esc(l.team.name)}" data-team-logo="${esc(l.team.logo||'')}" style="left:${x}%;top:${y}%">
+      <div class="ph"><div class="av">${st.photo? `<img loading="lazy" decoding="async" src="${st.photo}" loading="lazy" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))">` : `<span>${esc(p.number ?? '')}</span>`}</div>
+        ${rt ? `<span class="rt" style="background:${matchRatingColor(rt)}">${rt.toFixed(1)}</span>` : ''}
+        ${b.tr? `<span class="tr">${b.tr}</span>`:''}${b.tl? `<span class="tl">${b.tl}</span>`:''}${b.bl? `<span class="bl">${b.bl}</span>`:''}
+        ${cap? '<span class="cap">C</span>':''}
+        <button class="mp-note-btn" data-pid="${p.id}" data-pname="${esc(p.name)}" data-poskey="${guessScoutPositionKey(p.pos, r, maxRow, i+1, count)}" title="Bu maça özel not">✎</button>
+      </div>
+      <span class="nm"><em>${esc(p.number ?? '')}</em>${esc(shortName(p.name))}</span>
+    </div>`;
+  };
+  const half = (l, side)=>{
+    if(!l) return '';
+    const withGrid = (l.startXI||[]).map(x=>x.player).filter(p=>p.grid);
+    if(!withGrid.length) return '';
+    const rows = {}; withGrid.forEach(p=>{ const [r,c] = p.grid.split(':').map(Number); (rows[r] = rows[r]||[]).push({...p, col:c}); });
+    const keys = Object.keys(rows).map(Number).sort((a,b)=>a-b); const maxRow = Math.max(...keys, 1);
+    let out = '';
+    keys.forEach(r=>{
+      const rp = rows[r].slice().sort((a,b)=> b.col-a.col);
+      const t = (r-1)/((maxRow-1)||1);
+      const y = 9 + t*80;
+      rp.forEach((p,i)=>{ const x = ((i+1)/(rp.length+1))*100; out += node(p, l, side, x, y, r, maxRow, i, rp.length); });
+    });
+    return out;
+  };
+  const pitchFor = (l, side)=> l && (l.startXI||[]).some(x=> x.player && x.player.grid) ? `<div class="lu5">${teamBar(l, side)}<div class="pitch5"><div class="ln p-t1"></div><div class="ln p-t2"></div><div class="ln p-ta"></div><div class="ln p-mid"></div><div class="ln p-c"></div>${half(l, side)}</div></div>` : '';
+  const hasGrid = [homeL, awayL].some(l=> l && (l.startXI||[]).some(x=> x.player && x.player.grid));
+  const benchCol = (l)=>{
+    if(!l) return '';
+    const subs = (l.substitutes||[]).slice().sort((a,b)=> (subIn[b.player.id]!==undefined) - (subIn[a.player.id]!==undefined));
+    const xiList = hasGrid ? '' : (l.startXI||[]).map(x=> benchRow(x.player, l, statsMap, subIn, gl, as)).join('');
+    return `<div class="bn5"><div class="bn5-h"><img loading="lazy" decoding="async" src="${l.team.logo}" alt="" onerror="this.style.visibility='hidden'"><b>${esc(l.team.name)}</b></div>
+      ${xiList ? '<div class="bn5-t">İlk 11</div>'+xiList : ''}
+      <div class="bn5-t">Yedekler</div>
+      ${subs.map(x=> benchRow(x.player, l, statsMap, subIn, gl, as)).join('') || '<div class="bn-row" style="cursor:default;color:var(--ink2)">Yok</div>'}</div>`;
+  };
+  const confirmed = (lineups||[]).length && !(fx.fixture.status.short==='NS');
+  lineupsBox.innerHTML = `
+    <div class="lu5-tools"><span class="lu5-tag ${confirmed?'ok':''}">${confirmed? 'Kesin kadro' : 'Açıklanan kadro'}</span><span style="flex:1"></span><button class="chip-btn" id="luNotesBtn">✎ Oyuncu notu</button><button class="chip-btn" id="refreshLineupsBtn">↻ Yenile</button></div>
+    ${hasGrid ? `<div class="lu5-wrap">${pitchFor(homeL,'home')}${pitchFor(awayL,'away')}</div>` : ''}
+    <div class="lu5-leg"><span>${IC.ball} Gol</span><span>${IC.ast} Asist</span><span>${IC.yc} Kart</span><span>${IC.out} Çıktı</span><span>${IC.inn} Girdi</span><span><i class="rtk" style="background:${matchRatingColor(7.2)}"></i>Reyting</span>${motm? '<span><i class="motm-k"></i>Maçın oyuncusu</span>':''}</div>
+    <div class="bench5">${benchCol(homeL)}${benchCol(awayL)}</div>`;
+  lineupsBox.querySelectorAll('.ev-player-link, .lineup-slot-click').forEach(el=>{
+    el.onclick = (e)=>{
+      if(e.target.closest('.mp-note-btn')) return;
+      e.preventDefault();
+      const pid = el.getAttribute('data-pid'); if(!pid) return;
+      openPlayerModalById(parseInt(pid,10), {id:parseInt(el.getAttribute('data-team-id'),10), name:el.getAttribute('data-team-name'), logo:el.getAttribute('data-team-logo')}, undefined, fx);
+    };
+  });
+  lineupsBox.querySelectorAll('.mp-note-btn').forEach(async btn=>{
+    const pid = parseInt(btn.getAttribute('data-pid'),10);
+    btn.onclick = (e)=>{ e.preventDefault(); e.stopPropagation(); openMatchPlayerNoteModal(fx, pid, btn.getAttribute('data-pname'), btn, btn.getAttribute('data-poskey')); };
+    const ex = await getNotePayload('matchplayer', fx.fixture.id+'_'+pid);
+    if(ex && ex.payload && ((ex.payload.note && ex.payload.note.trim()) || (ex.payload.rating!==null && ex.payload.rating!==undefined))) btn.classList.add('has');
+  });
+  const nb = lineupsBox.querySelector('#luNotesBtn');
+  if(nb) nb.onclick = ()=>{ lineupsBox.classList.toggle('notes-on'); nb.classList.toggle('on', lineupsBox.classList.contains('notes-on')); if(lineupsBox.classList.contains('notes-on')) showToast('Not eklemek için oyuncunun üstündeki ✎ simgesine dokun'); };
+  const rb = lineupsBox.querySelector('#refreshLineupsBtn');
+  if(rb && loadMatchDetailsRef) rb.onclick = ()=>{ rb.textContent = 'Yenileniyor…'; loadMatchDetailsRef(fx); };
+}
+function benchRow(p, l, statsMap, subIn, gl, as){
+  const st = statsMap[p.id] || {}; const r = st.games && st.games.rating ? parseFloat(st.games.rating) : null;
+  const inMin = subIn[p.id]; const g = gl[p.id]||0, a = as[p.id]||0;
+  const posKey = p.pos==='G'?'gk':p.pos==='D'?'cb':p.pos==='F'?'st':'cm';
+  const posTr = {G:'Kaleci', D:'Defans', M:'Orta saha', F:'Forvet'}[p.pos] || '';
+  return `<div class="bn-row ev-player-link ${inMin!==undefined?'played':''}" data-pid="${p.id}" data-team-id="${l.team.id}" data-team-name="${esc(l.team.name)}" data-team-logo="${esc(l.team.logo||'')}">
+    <span class="av">${st.photo? `<img loading="lazy" decoding="async" src="${st.photo}" loading="lazy" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))">` : esc(p.number ?? '')}</span>
+    <span class="n"><b>${esc(p.name)}</b><small>${esc(p.number ?? '')}${posTr? ' · '+posTr:''}</small></span>
+    <span class="bx">${g? IC.ball+(g>1?`<em>${g}</em>`:''):''}${a? IC.ast:''}${inMin!==undefined? `<span class="in">${IC.inn}${inMin}'</span>`:''}</span>
+    ${r? `<span class="rt" style="background:${matchRatingColor(r)}">${r.toFixed(1)}</span>` : ''}
+    <button class="mp-note-btn" data-pid="${p.id}" data-pname="${esc(p.name)}" data-poskey="${posKey}" title="Bu maça özel not">✎</button>
+  </div>`;
+}
+
+// ---------- İSTATİSTİKLER ----------
+function modernStatsHtml(stats, fx){
+  const find = (idx, type)=>{ const arr = (stats[idx]&&stats[idx].statistics)||[]; const f = arr.find(s=>s.type===type); return (f && f.value!==null && f.value!==undefined) ? f.value : null; };
+  const num = (v)=> v===null||v===undefined ? null : parseFloat(String(v).replace('%',''));
+  const lowerBetter = new Set(['Fouls','Yellow Cards','Red Cards','Offsides']);
+  const pct = new Set(['Passes %','Ball Possession']);
+  function row(type, label, hRaw, aRaw){
+    const h = hRaw!==undefined ? hRaw : find(0,type), a = aRaw!==undefined ? aRaw : find(1,type);
+    if(h===null && a===null) return '';
+    const hv = num(h)||0, av = num(a)||0;
+    const isPct = pct.has(type) || /%$/.test(String(h||''));
+    const max = isPct ? 100 : Math.max(hv, av) || 1;
+    let hw = hv>av, aw = av>hv;
+    if(lowerBetter.has(type)){ const t = hw; hw = aw; aw = t; }
+    return `<div class="s5-row"><div class="s5-top"><span class="s5-v h ${hw?'win':''}">${esc(h ?? 0)}</span><span class="l">${esc(label)}</span><span class="s5-v a ${aw?'win':''}">${esc(a ?? 0)}</span></div>
+      <div class="s5-bars"><div class="h"><i class="${hw?'win':''}" style="width:${Math.max(hv?3:0, hv/max*100)}%"></i></div><div class="a"><i class="${aw?'win':''}" style="width:${Math.max(av?3:0, av/max*100)}%"></i></div></div></div>`;
+  }
+  function group(title, items){
+    const html = items.map(it=>row(...it)).join('');
+    return html ? `<section class="s5-grp"><h5>${title}</h5>${html}</section>` : '';
+  }
+  const poss = num(find(0,'Ball Possession'));
+  const xgH = find(0,'expected_goals'), xgA = find(1,'expected_goals');
+  const shotsH = num(find(0,'Total Shots'))||0, onH = num(find(0,'Shots on Goal'))||0;
+  const shotsA = num(find(1,'Total Shots'))||0, onA = num(find(1,'Shots on Goal'))||0;
+  const known = new Set(['Ball Possession','expected_goals','Total Shots','Shots on Goal','Shots off Goal','Blocked Shots','Shots insidebox','Shots outsidebox','Total passes','Passes accurate','Passes %','Fouls','Yellow Cards','Red Cards','Offsides','Corner Kicks','Goalkeeper Saves','goals_prevented']);
+  const others = ((stats[0]&&stats[0].statistics)||[]).filter(s=>!known.has(s.type)).map(s=>[s.type, translateStat(s.type)]);
+  const accH = shotsH ? Math.round(onH/shotsH*100)+'%' : '0%', accA = shotsA ? Math.round(onA/shotsA*100)+'%' : '0%';
+  // üst özet: 3 büyük kutu (topa sahip olma, xG, isabetli şut)
+  const ring = (v)=>{ const c = 2*Math.PI*26; return `<svg viewBox="0 0 64 64" class="s5-ring"><circle cx="32" cy="32" r="26" class="tr"/><circle cx="32" cy="32" r="26" class="aw" style="stroke-dasharray:${c} ${c}"/><circle cx="32" cy="32" r="26" class="hm" style="stroke-dasharray:${c*v/100} ${c}"/></svg>`; };
+  const hero = `<div class="s5-hero">
+    ${poss!==null && !isNaN(poss) ? `<div class="s5-k"><div class="ringw">${ring(poss)}<b>${Math.round(poss)}<small>%</small></b></div><span>Topa sahip olma</span><div class="pr"><i class="h">${Math.round(poss)}%</i><i class="a">${Math.round(100-poss)}%</i></div></div>` : ''}
+    ${xgH!==null || xgA!==null ? `<div class="s5-k"><div class="dual"><b class="h">${esc(xgH ?? '-')}</b><em>:</em><b class="a">${esc(xgA ?? '-')}</b></div><span>Gol beklentisi (xG)</span><div class="pr"><i>${fx.goals.home ?? 0} gol</i><i>${fx.goals.away ?? 0} gol</i></div></div>` : ''}
+    ${shotsH||shotsA ? `<div class="s5-k"><div class="dual"><b class="h">${onH}</b><em>:</em><b class="a">${onA}</b></div><span>İsabetli şut</span><div class="pr"><i>${shotsH} şut</i><i>${shotsA} şut</i></div></div>` : ''}
+  </div>`;
+  return `<div class="s5">
+    <div class="s5-teams"><span class="h"><img loading="lazy" decoding="async" src="${fx.teams.home.logo}" onerror="this.style.visibility='hidden'"><b>${esc(fx.teams.home.name)}</b></span><span class="a"><b>${esc(fx.teams.away.name)}</b><img loading="lazy" decoding="async" src="${fx.teams.away.logo}" onerror="this.style.visibility='hidden'"></span></div>
+    ${hero}
+    ${group('Maça genel bakış', [['Ball Possession','Topa sahip olma'],['expected_goals','Gol beklentisi (xG)'],['Total Shots','Toplam şut'],['Goalkeeper Saves','Kaleci kurtarışı'],['Corner Kicks','Korner'],['Fouls','Faul'],['Total passes','Pas']])}
+    ${group('Şutlar', [['Total Shots','Toplam şut'],['Shots on Goal','İsabetli şut'],['Shots off Goal','İsabetsiz şut'],['Blocked Shots','Engellenen şut'],['Shots insidebox','Ceza sahası içinden'],['Shots outsidebox','Ceza sahası dışından'],...(shotsH||shotsA ? [['_acc','Şut isabeti', accH, accA]] : [])])}
+    ${group('Pas', [['Total passes','Toplam pas'],['Passes accurate','İsabetli pas'],['Passes %','Pas isabeti']])}
+    ${group('Savunma ve disiplin', [['Goalkeeper Saves','Kaleci kurtarışı'],['goals_prevented','Önlenen gol'],['Fouls','Faul'],['Offsides','Ofsayt'],['Yellow Cards','Sarı kart'],['Red Cards','Kırmızı kart']])}
+    ${others.length ? group('Diğer', others) : ''}
+  </div>`;
+}
+
+// ---------- LİG LİDERLERİ (gol / asist krallığı) ----------
+function leaderCardHtml(rank, photo, name, teamLogo, statVal, statLabel, color, badges, playerId, team){
+  const teamId = team ? team.id : '', teamName = team ? team.name : '';
+  const b = (badges||[]).filter(x=>x[1]!==null && x[1]!==undefined).map(([ic,t])=> esc(String(t))).join(' · ');
+  return `<div class="ld-row lb-row" data-pid="${playerId||''}">
+    <span class="rk ${rank<=3?'r'+rank:''}">${rank}</span>
+    <span class="ph"><img loading="lazy" decoding="async" src="${photo||''}" loading="lazy" alt="" onerror="this.style.visibility='hidden'"></span>
+    <span class="n"><b>${esc(name)}</b><small><img loading="lazy" decoding="async" class="lb-team-logo" data-team-id="${teamId}" data-team-name="${esc(teamName)}" data-team-logo="${esc(teamLogo||'')}" src="${teamLogo||''}" onerror="this.style.display='none'">${esc(teamName||'')}${b? ' · '+b:''}</small></span>
+    <span class="v">${esc(String(statVal).replace(/[^\d.,\-]/g,'') || statVal)}<small>${esc(statLabel||'')}</small></span>
+  </div>`;
+}
+async function loadLeaderboards(league, season, standingGroups, box){
+  if(!box) return;
+  const TABS = [['g','Gol krallığı'],['a','Asist krallığı'],['ga','Gol + Asist'],['x','Kaleci & reyting']];
+  let tab = 'g'; try{ tab = localStorage.getItem('scoutdosyasi_ldtab') || 'g'; }catch(e){}
+  box.innerHTML = `<section class="ld5">
+    <div class="ld5-h"><div><b>Lig liderleri</b><small>${esc(league.name||'')} · ${season}/${String(season+1).slice(2)}</small></div><button class="chip-btn" id="ldShare" title="Paylaşım kartı">📸 Kart</button></div>
+    <div class="ld5-tabs">${TABS.map(([k,l])=>`<button data-k="${k}" class="${k===tab?'on':''}">${l}</button>`).join('')}</div>
+    <div id="ldBody"><div class="ld5-pod">${'<div class="skel" style="height:150px"></div>'.repeat(3)}</div>${'<div class="skel" style="height:52px;margin:6px 12px"></div>'.repeat(4)}</div>
+    <div id="ldLegacy" style="display:none"></div>
+  </section>`;
+  const body = box.querySelector('#ldBody'), legacy = box.querySelector('#ldLegacy');
+  let scorers = null, assists = null, legacyOn = false, showAll = false;
+  const load = async (k)=>{
+    try{
+      if(k==='g' || k==='ga') scorers = scorers || await apiFetch('/players/topscorers', {league:league.id, season}, 'normal');
+      if(k==='a' || k==='ga') assists = assists || await apiFetch('/players/topassists', {league:league.id, season}, 'normal');
+    }catch(e){ body.innerHTML = `<div class="ld5-empty">Alınamadı. <button class="chip-btn" id="ldRetry">Tekrar dene</button></div>`; body.querySelector('#ldRetry').onclick = ()=> draw(); return false; }
+    return true;
+  };
+  const listFor = (k)=>{
+    const mk = (p, v, sub)=>{ const st = p.statistics[0]||{}; return {id:p.player.id, name:p.player.name, photo:p.player.photo, team:st.team||{}, v, sub, apps:(st.games&&st.games.appearences)||0, min:(st.games&&st.games.minutes)||0, g:(st.goals&&st.goals.total)||0, a:(st.goals&&st.goals.assists)||0, pen:(st.penalty&&st.penalty.scored)||0}; };
+    if(k==='g') return (scorers||[]).map(p=> mk(p, (p.statistics[0].goals.total||0)));
+    if(k==='a') return (assists||[]).map(p=> mk(p, (p.statistics[0].goals.assists||0)));
+    const m = new Map();
+    [...(scorers||[]), ...(assists||[])].forEach(p=>{ if(!m.has(p.player.id)) m.set(p.player.id, mk(p, 0)); });
+    const arr = [...m.values()]; arr.forEach(x=> x.v = x.g + x.a);
+    return arr.sort((a,b)=> b.v-a.v || b.g-a.g);
+  };
+  const unit = (k)=> k==='g' ? 'gol' : k==='a' ? 'asist' : 'G+A';
+  async function draw(){
+    box.querySelectorAll('.ld5-tabs button').forEach(b=> b.classList.toggle('on', b.dataset.k===tab));
+    if(tab==='x'){
+      body.style.display = 'none'; legacy.style.display = '';
+      if(!legacyOn){ legacyOn = true; await __loadLeaderboardsOld(league, season, standingGroups, legacy); legacy.querySelectorAll('#lbScorers,#lbAssists').forEach(el=>{ const c = el.closest('.card'); if(c) c.remove(); }); }
+      return;
+    }
+    body.style.display = ''; legacy.style.display = 'none';
+    if(!(await load(tab))) return;
+    const list = listFor(tab).filter(x=> x.v>0);
+    if(!list.length){ body.innerHTML = '<div class="ld5-empty">Bu sezon için veri yok.</div>'; return; }
+    const max = list[0].v || 1;
+    const per90 = (x)=> x.min ? (x.v/x.min*90).toFixed(2) : '-';
+    const pod = list.slice(0,3);
+    const order = pod.length===3 ? [pod[1], pod[0], pod[2]] : pod;
+    const podHtml = `<div class="ld5-pod">${order.map(x=>{ const r = list.indexOf(x)+1; return `<div class="pd r${r} lb-row" data-pid="${x.id}">
+      <span class="ph"><img loading="lazy" decoding="async" src="${x.photo||''}" alt="" onerror="this.style.visibility='hidden'"><i class="md">${r}</i></span>
+      <b>${esc(shortName(x.name))}</b>
+      <small><img loading="lazy" decoding="async" src="${x.team.logo||''}" alt="" onerror="this.style.display='none'">${esc(x.team.name||'')}</small>
+      <span class="big">${x.v}<em>${unit(tab)}</em></span>
+      <span class="mini">${x.apps} maç · ${per90(x)} /90</span>
+    </div>`; }).join('')}</div>`;
+    const rest = list.slice(3, showAll ? 20 : 10);
+    const rowsHtml = rest.map((x,i)=> `<div class="ld-row lb-row" data-pid="${x.id}">
+      <span class="rk">${i+4}</span>
+      <span class="ph"><img loading="lazy" decoding="async" src="${x.photo||''}" loading="lazy" alt="" onerror="this.style.visibility='hidden'"></span>
+      <span class="n"><b>${esc(x.name)}</b><small><img loading="lazy" decoding="async" class="lb-team-logo" data-team-id="${x.team.id||''}" data-team-name="${esc(x.team.name||'')}" data-team-logo="${esc(x.team.logo||'')}" src="${x.team.logo||''}" onerror="this.style.display='none'">${esc(x.team.name||'')} · ${x.apps} maç${tab==='ga'? ` · ${x.g}G ${x.a}A` : tab==='g' && x.pen ? ` · ${x.pen} pen.` : ''}</small><i class="bar"><i style="width:${x.v/max*100}%"></i></i></span>
+      <span class="v">${x.v}<small>${per90(x)} /90</small></span>
+    </div>`).join('');
+    body.innerHTML = podHtml + `<div class="ld5-list">${rowsHtml}</div>` + (list.length>10 ? `<button class="ld5-more" id="ldMore">${showAll? 'Daha az göster' : 'İlk 20\'yi göster'}</button>` : '');
+    const mb = body.querySelector('#ldMore'); if(mb) mb.onclick = ()=>{ showAll = !showAll; draw(); };
+  }
+  box.querySelectorAll('.ld5-tabs button').forEach(b=> b.onclick = ()=>{ tab = b.dataset.k; try{ localStorage.setItem('scoutdosyasi_ldtab', tab); }catch(e){} draw(); });
+  body.addEventListener('click', (e)=>{
+    const tl = e.target.closest('.lb-team-logo');
+    if(tl && tl.dataset.teamId){ e.stopPropagation(); openTeam({id:parseInt(tl.dataset.teamId,10), name:tl.dataset.teamName, logo:tl.dataset.teamLogo}); return; }
+    const row = e.target.closest('.lb-row'); if(row && row.dataset.pid) openPlayerModalById(parseInt(row.dataset.pid,10), null, undefined);
+  });
+  box.querySelector('#ldShare').onclick = async ()=>{
+    try{
+      if(tab==='a'){ await load('a'); openSimpleShareCard('Asist Krallığı Kartı', buildLeaderboardCardHtml('Asist Krallığı', '🅰️', assists, 'assists', '#3B82F6')); }
+      else { await load('g'); openSimpleShareCard('Gol Krallığı Kartı', buildLeaderboardCardHtml('Gol Krallığı', '⚽', scorers, 'goals', 'var(--good)')); }
+    }catch(e){ showToast('Kart oluşturulamadı'); }
+  };
+  draw();
 }
 
 // ---------- init ----------

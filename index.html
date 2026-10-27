@@ -9342,8 +9342,12 @@ async function renderLineupsFull(lineups, events, lineupsBox, fx, overlay, loadM
   const node = (p, l, side, x, y, r, maxRow, i, count)=>{
     const st = statsMap[p.id] || {}; const rt = rOf(p.id); const b = badges(p.id);
     const cap = st.games && st.games.captain;
+    // mac henuz oynanmadiysa /fixtures/players istatistik dondurmuyor, dolayisiyla st.photo bos kaliyor -
+    // bu durumda API-Sports'un sabit foto URL kalibina (media.api-sports.io/football/players/{id}.png) dusuyoruz,
+    // o da yoksa onerror formadaki numaraya geri donuyor
+    const photoUrl = st.photo || `https://media.api-sports.io/football/players/${p.id}.png`;
     return `<div class="pl5 ${side} lineup-slot-click ${p.id===motm?'motm':''}" data-pid="${p.id}" data-team-id="${l.team.id}" data-team-name="${esc(l.team.name)}" data-team-logo="${esc(l.team.logo||'')}" style="left:${x}%;top:${y}%">
-      <div class="ph"><div class="av">${st.photo? `<img loading="lazy" decoding="async" src="${st.photo}" loading="lazy" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))">` : `<span>${esc(p.number ?? '')}</span>`}</div>
+      <div class="ph"><div class="av"><img loading="lazy" decoding="async" src="${photoUrl}" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))"></div>
         ${rt ? `<span class="rt" style="background:${matchRatingColor(rt)}">${rt.toFixed(1)}</span>` : ''}
         ${b.tr? `<span class="tr">${b.tr}</span>`:''}${b.tl? `<span class="tl">${b.tl}</span>`:''}${b.bl? `<span class="bl">${b.bl}</span>`:''}
         ${cap? '<span class="cap">C</span>':''}
@@ -9362,7 +9366,10 @@ async function renderLineupsFull(lineups, events, lineupsBox, fx, overlay, loadM
     keys.forEach(r=>{
       const rp = rows[r].slice().sort((a,b)=> b.col-a.col);
       const t = (r-1)/((maxRow-1)||1);
-      const y = 9 + t*80;
+      // iki takim alt alta gosterildigi icin (sahanin iki yarisi gibi), deplasman takiminin dizilisini dikeyde ters ceviriyoruz:
+      // ev sahibinde kaleci ustte/forvet altta (ortadaki cizgiye yakin); deplasmanda forvet ustte (ortadaki cizgiye yakin)/kaleci altta
+      // - boylece iki takim gercek bir sahada oldugu gibi karsi karsiya geliyor
+      const y = side==='away' ? 9 + (1-t)*80 : 9 + t*80;
       rp.forEach((p,i)=>{ const x = ((i+1)/(rp.length+1))*100; out += node(p, l, side, x, y, r, maxRow, i, rp.length); });
     });
     return out;
@@ -9408,8 +9415,9 @@ function benchRow(p, l, statsMap, subIn, gl, as){
   const inMin = subIn[p.id]; const g = gl[p.id]||0, a = as[p.id]||0;
   const posKey = p.pos==='G'?'gk':p.pos==='D'?'cb':p.pos==='F'?'st':'cm';
   const posTr = {G:'Kaleci', D:'Defans', M:'Orta saha', F:'Forvet'}[p.pos] || '';
+  const photoUrl = st.photo || `https://media.api-sports.io/football/players/${p.id}.png`;
   return `<div class="bn-row ev-player-link ${inMin!==undefined?'played':''}" data-pid="${p.id}" data-team-id="${l.team.id}" data-team-name="${esc(l.team.name)}" data-team-logo="${esc(l.team.logo||'')}">
-    <span class="av">${st.photo? `<img loading="lazy" decoding="async" src="${st.photo}" loading="lazy" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))">` : esc(p.number ?? '')}</span>
+    <span class="av"><img loading="lazy" decoding="async" src="${photoUrl}" alt="" onerror="this.replaceWith(document.createTextNode('${esc(p.number ?? '')}'))"></span>
     <span class="n"><b>${esc(p.name)}</b><small>${esc(p.number ?? '')}${posTr? ' · '+posTr:''}</small></span>
     <span class="bx">${g? IC.ball+(g>1?`<em>${g}</em>`:''):''}${a? IC.ast:''}${inMin!==undefined? `<span class="in">${IC.inn}${inMin}'</span>`:''}</span>
     ${r? `<span class="rt" style="background:${matchRatingColor(r)}">${r.toFixed(1)}</span>` : ''}

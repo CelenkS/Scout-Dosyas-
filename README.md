@@ -31,6 +31,12 @@ görülebiliyor. Oyuncu detay kartının tasarımı yenilendi: gradyanlı başl�
 fotoğraf etrafında altın halka, renkli ikonlu istatistik kutuları ve kulüp
 rozetli kariyer tablosu.
 
+Keşfet sekmesindeki eski 3 ayrı arama kutusu ("Lig/Ülke Ara", "Takım Ara",
+"Oyuncu Ara") tek bir arama kutusunda birleşti: yazılan isim lig, takım,
+oyuncu ve **teknik direktör**'de aynı anda aranıp sonuçlar gruplar halinde
+gösteriliyor. Teknik direktör arama sonucuna tıklayınca kariyer geçmişi ve
+kupaları gösteren bir detay kartı açılıyor.
+
 - Canlı adres: GitHub Pages (Settings → Pages → main / root)
 - Telefona kurulum: adresi Safari'de aç → Paylaş → **Ana Ekrana Ekle**
 - API anahtarı koda gömülü değildir; uygulamada Ayarlar'dan girilir (giriş yapınca buluttan gelir).

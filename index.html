@@ -1511,7 +1511,6 @@ const state = {
   followed: [],
   followedPlayers: [],
   view: 'setup',
-  discoverMode: 'league',
   currentTeam: null,
   teamSubview: 'fixtures',
   teamSeason: null,
@@ -2726,22 +2725,16 @@ async function getCountries(){
 
 function renderDiscover(content){
   content.innerHTML = `
-    <div class="subtabs">
-      <button data-m="league" class="${state.discoverMode==='league'?'active':''}">Lig / Ülke Ara</button>
-      <button data-m="team" class="${state.discoverMode==='team'?'active':''}">Takım Ara</button>
-      <button data-m="player" class="${state.discoverMode==='player'?'active':''}">Oyuncu Ara</button>
-    </div>
-    ${state.discoverMode==='player' ? `<p style="font-size:11.5px;color:var(--chalk-dim); margin:0 0 8px;">Direkt isim yazarsan Scout Ligleri listen + takip ettiğin takımların liglerinde otomatik arar. Yeni bir lig ekleyip kalıcı kapsamını genişletmek için aşağıdan ülke/lig seçip "Scout Listeme Ekle" de — takip etmene gerek yok.</p>` : ''}
+    <p style="font-size:11.5px;color:var(--chalk-dim); margin:0 0 8px;">Takım, lig/ülke, oyuncu ya da teknik direktör — ne arıyorsan tek kutudan ara. Oyuncu/teknik direktör aramasında isim en az 3 harf olmalı; oyuncu araması Scout Ligleri listen + takip ettiğin takımların liglerinde otomatik çalışır (aşağıdan ülke/lig seçip "Scout Listeme Ekle" ile kalıcı kapsam ekleyebilirsin).</p>
     <div class="search-row">
-      <input id="searchInput" type="text" placeholder="${state.discoverMode==='league' ? 'Örn: Turkey, Süper Lig, Germany...' : (state.discoverMode==='team' ? 'Örn: Galatasaray, Fenerbahçe...' : 'Oyuncu adı, örn: Icardi...')}">
-      ${state.discoverMode==='player' ? `<div class="season-pill">Sezon <select id="playerSearchSeason">${seasonOptionsHtml(state.season)}</select></div>` : ''}
+      <input id="searchInput" type="text" placeholder="Örn: Galatasaray, Süper Lig, Icardi, Mourinho...">
+      <div class="season-pill">Sezon <select id="playerSearchSeason">${seasonOptionsHtml(state.season)}</select></div>
       <button id="searchBtn">Ara</button>
     </div>
     <p style="font-size:11px; color:var(--chalk-dim); margin:0 0 6px;">Ya da yazmadan seçerek bul:</p>
     <div id="cascadeRow" style="margin-bottom:14px;"></div>
     <div id="results"></div>
   `;
-  document.querySelectorAll('.subtabs button').forEach(b=>{ b.onclick = ()=>{ state.discoverMode = b.getAttribute('data-m'); render(); }; });
   document.getElementById('searchBtn').onclick = runDiscoverSearch;
   document.getElementById('searchInput').addEventListener('keydown', e=>{ if(e.key==='Enter') runDiscoverSearch(); });
   renderCascade();
@@ -2788,95 +2781,86 @@ async function renderCascade(){
   box.innerHTML = '<div class="loading" style="padding:6px 0;">Ülkeler yükleniyor...</div>';
   const countries = await getCountries();
 
-  if(state.discoverMode==='league'){
-    box.innerHTML = `<div class="search-row">${comboHtml('cCountry','Ülke ara ya da seç...')}</div>`;
-    wireCombo('cCountry', countries, c=>c.name, c=>c.flag, (c)=>{
-      document.getElementById('searchInput').value = c.name;
-      runDiscoverSearch();
-    });
-  } else if(state.discoverMode==='team'){
-    box.innerHTML = `
-      <div class="search-row">
-        ${comboHtml('cCountry','Ülke ara ya da seç...')}
-        ${comboHtml('cLeagueText','Önce ülke seç')}
-      </div>
-    `;
-    document.getElementById('cLeagueText').disabled = true;
-    wireCombo('cCountry', countries, c=>c.name, c=>c.flag, async (c)=>{
-      const leagueInput = document.getElementById('cLeagueText');
-      leagueInput.disabled = false;
-      leagueInput.value = '';
-      leagueInput.placeholder = 'Yükleniyor...';
-      const leagues = await apiFetch('/leagues', {country:c.name});
-      leagueInput.placeholder = 'Lig ara ya da seç...';
-      wireCombo('cLeagueText', leagues, l=>l.league.name, l=>l.league.logo, (l)=>{
-        showLeagueTeams(l.league.id, l.league.name, l.league.logo, document.getElementById('results'));
-      });
-    });
-  } else {
-    box.innerHTML = `
-      <div class="search-row">
-        ${comboHtml('cCountry','Ülke ara ya da seç...')}
-        ${comboHtml('cLeagueText','Önce ülke seç')}
-        ${comboHtml('cTeamText','(opsiyonel) Takım')}
-      </div>
-      <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
-        <button class="icon-btn" id="addScoutLeagueBtn" disabled>+ Seçili Ligi Scout Listeme Ekle</button>
-      </div>
-      <div id="scoutLeagueChips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
-    `;
-    document.getElementById('cLeagueText').disabled = true;
-    document.getElementById('cTeamText').disabled = true;
-    let selectedLeague = null, selectedLeagueMeta = null, selectedTeam = null;
-    window._playerCascadeSel = ()=> ({league: selectedLeague, team: selectedTeam});
+  box.innerHTML = `
+    <div class="search-row">
+      ${comboHtml('cCountry','Ülke ara ya da seç...')}
+      ${comboHtml('cLeagueText','Önce ülke seç')}
+      ${comboHtml('cTeamText','(opsiyonel) Takım — oyuncu/direktör aramasını daraltır')}
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
+      <button class="icon-btn" id="addScoutLeagueBtn" disabled>+ Seçili Ligi Scout Listeme Ekle</button>
+    </div>
+    <div id="scoutLeagueChips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
+  `;
+  document.getElementById('cLeagueText').disabled = true;
+  document.getElementById('cTeamText').disabled = true;
+  let selectedLeague = null, selectedLeagueMeta = null, selectedTeam = null;
+  window._playerCascadeSel = ()=> ({league: selectedLeague, team: selectedTeam});
 
-    async function renderScoutChips(){
-      const list = await getScoutLeagues();
-      const chipsBox = document.getElementById('scoutLeagueChips');
-      if(!chipsBox) return;
-      chipsBox.innerHTML = list.length ? list.map(l=>`
-        <span style="display:inline-flex; align-items:center; gap:5px; background:var(--pitch); border:1px solid var(--pitch-line); border-radius:14px; padding:4px 10px; font-size:12px;">
-          <img loading="lazy" decoding="async" src="${l.logo||''}" style="width:14px;height:14px;object-fit:contain;" onerror="this.style.visibility='hidden'">
-          ${esc(l.name)}
-          <a href="#" data-removeleague="${l.id}" style="color:var(--bad); text-decoration:none; font-weight:700; margin-left:2px;">×</a>
-        </span>
-      `).join('') : '<span style="font-size:11px; color:var(--chalk-dim);">Henüz scout ligi eklemedin — direkt yazınca burada eklediğin liglerde arar.</span>';
-      chipsBox.querySelectorAll('[data-removeleague]').forEach(a=>{
-        a.onclick = async (e)=>{ e.preventDefault(); await removeScoutLeague(parseInt(a.getAttribute('data-removeleague'),10)); renderScoutChips(); };
-      });
-    }
-    renderScoutChips();
-
-    wireCombo('cCountry', countries, c=>c.name, c=>c.flag, async (c)=>{
-      const leagueInput = document.getElementById('cLeagueText');
-      const teamInput = document.getElementById('cTeamText');
-      teamInput.value = ''; teamInput.disabled = true; selectedTeam = null;
-      leagueInput.disabled = false;
-      leagueInput.value = '';
-      leagueInput.placeholder = 'Yükleniyor...';
-      const leagues = await apiFetch('/leagues', {country:c.name});
-      leagueInput.placeholder = 'Lig ara ya da seç...';
-      wireCombo('cLeagueText', leagues, l=>l.league.name, l=>l.league.logo, async (l)=>{
-        selectedLeague = l.league.id;
-        selectedLeagueMeta = {id:l.league.id, name:l.league.name, logo:l.league.logo};
-        document.getElementById('addScoutLeagueBtn').disabled = false;
-        teamInput.disabled = false;
-        teamInput.value = '';
-        teamInput.placeholder = 'Yükleniyor...';
-        const seasonInput = document.getElementById('playerSearchSeason');
-        const season = seasonInput ? parseInt(seasonInput.value,10) : state.season;
-        const teams = await apiFetch('/teams', {league:l.league.id, season});
-        teamInput.placeholder = '(opsiyonel) Takım — boş bırakırsan tüm ligde arar';
-        wireCombo('cTeamText', teams, t=>t.team.name, t=>t.team.logo, (t)=>{ selectedTeam = t.team.id; });
-      });
+  async function renderScoutChips(){
+    const list = await getScoutLeagues();
+    const chipsBox = document.getElementById('scoutLeagueChips');
+    if(!chipsBox) return;
+    chipsBox.innerHTML = list.length ? list.map(l=>`
+      <span style="display:inline-flex; align-items:center; gap:5px; background:var(--pitch); border:1px solid var(--pitch-line); border-radius:14px; padding:4px 10px; font-size:12px;">
+        <img loading="lazy" decoding="async" src="${l.logo||''}" style="width:14px;height:14px;object-fit:contain;" onerror="this.style.visibility='hidden'">
+        ${esc(l.name)}
+        <a href="#" data-removeleague="${l.id}" style="color:var(--bad); text-decoration:none; font-weight:700; margin-left:2px;">×</a>
+      </span>
+    `).join('') : '<span style="font-size:11px; color:var(--chalk-dim);">Henüz scout ligi eklemedin — direkt yazınca burada eklediğin liglerde (+ takip ettiğin takımların liglerinde) arar.</span>';
+    chipsBox.querySelectorAll('[data-removeleague]').forEach(a=>{
+      a.onclick = async (e)=>{ e.preventDefault(); await removeScoutLeague(parseInt(a.getAttribute('data-removeleague'),10)); renderScoutChips(); };
     });
-
-    document.getElementById('addScoutLeagueBtn').onclick = async ()=>{
-      if(!selectedLeagueMeta) return;
-      await addScoutLeague(selectedLeagueMeta);
-      renderScoutChips();
-    };
   }
+  renderScoutChips();
+
+  wireCombo('cCountry', countries, c=>c.name, c=>c.flag, async (c)=>{
+    const leagueInput = document.getElementById('cLeagueText');
+    const teamInput = document.getElementById('cTeamText');
+    teamInput.value = ''; teamInput.disabled = true; selectedTeam = null;
+    leagueInput.disabled = false;
+    leagueInput.value = '';
+    leagueInput.placeholder = 'Yükleniyor...';
+    const leagues = await apiFetch('/leagues', {country:c.name});
+    leagueInput.placeholder = 'Lig ara ya da seç...';
+    wireCombo('cLeagueText', leagues, l=>l.league.name, l=>l.league.logo, async (l)=>{
+      selectedLeague = l.league.id;
+      selectedLeagueMeta = {id:l.league.id, name:l.league.name, logo:l.league.logo};
+      document.getElementById('addScoutLeagueBtn').disabled = false;
+      teamInput.disabled = false;
+      teamInput.value = '';
+      teamInput.placeholder = 'Yükleniyor...';
+      const seasonInput = document.getElementById('playerSearchSeason');
+      const season = seasonInput ? parseInt(seasonInput.value,10) : state.season;
+      const teams = await apiFetch('/teams', {league:l.league.id, season});
+      teamInput.placeholder = '(opsiyonel) Takım — boş bırakırsan tüm ligde arar';
+      wireCombo('cTeamText', teams, t=>t.team.name, t=>t.team.logo, (t)=>{ selectedTeam = t.team.id; });
+      // secilen ligin takimlarini da gorsel olarak gosteriyoruz - eskiden ayri bir "Takim Ara" sekmesindeki davranis buydu
+      showLeagueTeams(l.league.id, l.league.name, l.league.logo, document.getElementById('results'), season);
+    });
+  });
+
+  document.getElementById('addScoutLeagueBtn').onclick = async ()=>{
+    if(!selectedLeagueMeta) return;
+    await addScoutLeague(selectedLeagueMeta);
+    renderScoutChips();
+  };
+}
+
+// "harry kane" gibi 2 kelimeli bir arama bulamazsa, otomatik olarak sadece son kelimeyle (soyadi) tekrar dener
+// (orta isim iceren kayitli tam isimlerde -orn "Harry Edward Kane"- bitisik arama eslesmeyi kacirabiliyor) - oyuncu ve teknik direktor aramasinda ortak kullaniliyor
+async function searchWithFallback(path, query, params){
+  let res = await apiFetch(path, {...params, search:query});
+  if(!res.length){
+    const words = query.trim().split(/\s+/).filter(Boolean);
+    if(words.length>1){
+      const lastWord = words[words.length-1];
+      if(lastWord.length>=3){
+        res = await apiFetch(path, {...params, search:lastWord});
+      }
+    }
+  }
+  return res;
 }
 
 async function runDiscoverSearch(){
@@ -2884,13 +2868,84 @@ async function runDiscoverSearch(){
   const results = document.getElementById('results');
   if(!q) return;
   results.innerHTML = '<div class="loading">Aranıyor...</div>';
+  const sel = window._playerCascadeSel ? window._playerCascadeSel() : {league:null, team:null};
+  const leagueId = sel.league;
+  const teamId = sel.team;
+  const seasonInput = document.getElementById('playerSearchSeason');
+  const searchSeason = seasonInput ? parseInt(seasonInput.value,10) : state.season;
+
+  async function findLeagues(){
+    let leagues = await apiFetch('/leagues', {search:q});
+    if(!leagues.length) leagues = await apiFetch('/leagues', {country:q});
+    return leagues;
+  }
+  async function findTeams(){
+    return apiFetch('/teams', {search:q});
+  }
+  async function findCoaches(){
+    if(q.length<3) return [];
+    return searchWithFallback('/coachs', q, {});
+  }
+  async function findPlayers(){
+    if(q.length<3) return [];
+    if(teamId){
+      // takim secilmisse tum kadroyu cekip aksan/kisaltmadan bagimsiz kendimiz filtreliyoruz
+      // (API'nin kendi arama parametresi aksanli isimlerde -orn "Kante" ile "Kanté"- eslesme kacirabiliyor)
+      let page=1, totalPages=1, squad=[];
+      do{
+        const resp = await apiFetchFull('/players', {team:teamId, season:searchSeason, page});
+        squad = squad.concat(resp.response);
+        totalPages = resp.paging ? resp.paging.total : 1;
+        page++;
+      } while(page<=totalPages && page<=4);
+      // "harry kane" gibi cok kelimeli aramada, her kelimenin isimde AYRI AYRI gecmesi yeterli
+      // (bitisik substring aramasi orta isimli oyuncularda -orn "Harry Edward Kane"- kaciriyordu)
+      const qWords = normalizeName(q).split(/\s+/).filter(Boolean);
+      return squad.filter(pl=>{
+        const nf = normalizeName(pl.player.name);
+        return qWords.every(w=> nf.includes(w));
+      });
+    } else if(leagueId){
+      return searchWithFallback('/players', q, {league:leagueId, season:searchSeason});
+    } else {
+      // hicbir sey secilmemisse: API tek basina isim aramasini kabul etmiyor,
+      // bu yuzden Scout Ligleri listeni + takip ettigin takimlarin liglerinde otomatik ariyoruz
+      const scoutLeagues = await getScoutLeagues();
+      const followedLeagueIds = state.followed.filter(t=>t.league && t.league.id).map(t=>t.league.id);
+      const searchLeagueIds = [...new Set([...scoutLeagues.map(l=>l.id), ...followedLeagueIds])];
+      if(!searchLeagueIds.length) return [];
+      const resArr = await Promise.allSettled(searchLeagueIds.map(lid=>searchWithFallback('/players', q, {league:lid, season:searchSeason})));
+      const merged = [];
+      const seenIds = new Set();
+      resArr.forEach(r=>{
+        if(r.status!=='fulfilled') return;
+        r.value.forEach(pl=>{ if(!seenIds.has(pl.player.id)){ seenIds.add(pl.player.id); merged.push(pl); } });
+      });
+      return merged;
+    }
+  }
+
   try{
-    if(state.discoverMode==='league'){
-      let leagues = await apiFetch('/leagues', {search:q});
-      if(!leagues.length) leagues = await apiFetch('/leagues', {country:q});
-      if(!leagues.length){ results.innerHTML = '<div class="empty display">Sonuç Yok</div>'; return; }
-      const alreadyAdded = new Set((await getScoutLeagues()).map(l=>l.id));
-      results.innerHTML = leagues.slice(0,25).map(l=>`
+    const [leaguesR, teamsR, coachesR, playersR] = await Promise.allSettled([findLeagues(), findTeams(), findCoaches(), findPlayers()]);
+    const leagues = leaguesR.status==='fulfilled' ? leaguesR.value : [];
+    const teams = teamsR.status==='fulfilled' ? teamsR.value : [];
+    const coaches = coachesR.status==='fulfilled' ? coachesR.value : [];
+    const players = playersR.status==='fulfilled' ? playersR.value : [];
+
+    if(!leagues.length && !teams.length && !coaches.length && !players.length){
+      const scoutLeagues = await getScoutLeagues();
+      const followedLeagueIds = state.followed.filter(t=>t.league && t.league.id).map(t=>t.league.id);
+      const hasPlayerScope = scoutLeagues.length || followedLeagueIds.length || leagueId || teamId;
+      results.innerHTML = `<div class="empty display">Sonuç Yok</div><p style="text-align:center;color:var(--chalk-dim);font-size:12px;">${hasPlayerScope
+        ? 'Farklı bir isim ya da sezon yılı dene. En güvenilir sonuç için oyuncularda sadece soyadıyla ara.'
+        : 'Lig ve takım araması direkt çalışır. Oyuncu/teknik direktör aramak için de yukarıdan ülke + lig seçip "Scout Listeme Ekle" ile kalıcı kapsam ekle (takip etmene gerek yok), ya da birkaç takım takip et.'}</p>`;
+      return;
+    }
+
+    const alreadyAdded = leagues.length ? new Set((await getScoutLeagues()).map(l=>l.id)) : new Set();
+    let html = '';
+    if(leagues.length){
+      html += `<h3 style="font-size:13px; color:var(--chalk-dim); margin:10px 0 6px;">🏆 Ligler</h3>` + leagues.slice(0,15).map(l=>`
         <div class="card dossier" style="display:flex; align-items:center; gap:10px;">
           <div class="league-row" data-lid="${l.league.id}" data-lname="${esc(l.league.name)}" data-llogo="${esc(l.league.logo||'')}" style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;">
             <img loading="lazy" decoding="async" src="${l.league.logo||''}" onerror="this.style.visibility='hidden'" style="width:32px;height:32px;object-fit:contain;">
@@ -2901,85 +2956,20 @@ async function runDiscoverSearch(){
             : `<button class="follow-btn add-scout-league-btn" data-lid="${l.league.id}" data-lname="${esc(l.league.name)}" data-llogo="${esc(l.league.logo||'')}">+ Scout Listeme Ekle</button>`}
         </div>
       `).join('');
-      document.querySelectorAll('.league-row').forEach(row=>{
-        row.onclick = ()=> showLeagueTeams(row.getAttribute('data-lid'), row.getAttribute('data-lname'), row.getAttribute('data-llogo'), results);
-      });
-      document.querySelectorAll('.add-scout-league-btn').forEach(btn=>{
-        btn.onclick = async (e)=>{
-          e.stopPropagation();
-          await addScoutLeague({id:parseInt(btn.getAttribute('data-lid'),10), name:btn.getAttribute('data-lname'), logo:btn.getAttribute('data-llogo')});
-          btn.textContent = 'Eklendi ✓';
-          btn.disabled = true;
-        };
-      });
-    } else if(state.discoverMode==='team') {
-      const teams = await apiFetch('/teams', {search:q});
-      if(!teams.length){ results.innerHTML = '<div class="empty display">Sonuç Yok</div>'; return; }
-      renderTeamGrid(teams.map(t=>t.team), results);
-    } else {
-      if(q.length<3){ results.innerHTML = '<div class="empty display">En az 3 harf yaz</div>'; return; }
-      const sel = window._playerCascadeSel ? window._playerCascadeSel() : {league:null, team:null};
-      const leagueId = sel.league;
-      const teamId = sel.team;
-      const seasonInput = document.getElementById('playerSearchSeason');
-      const searchSeason = seasonInput ? parseInt(seasonInput.value,10) : state.season;
-      results.innerHTML = '<div class="loading">Aranıyor...</div>';
-      let players;
-      // "harry kane" gibi 2 kelimeli bir arama bulamazsa, otomatik olarak sadece son kelimeyle (soyadi) tekrar dener
-      // (orta isim iceren kayitli tam isimlerde -orn "Harry Edward Kane"- bitisik arama eslesmeyi kacirabiliyor)
-      async function searchWithFallback(query, params){
-        let res = await apiFetch('/players', {...params, search:query});
-        if(!res.length){
-          const words = query.trim().split(/\s+/).filter(Boolean);
-          if(words.length>1){
-            const lastWord = words[words.length-1];
-            if(lastWord.length>=3){
-              res = await apiFetch('/players', {...params, search:lastWord});
-            }
-          }
-        }
-        return res;
-      }
-      if(teamId){
-        // takim secilmisse tum kadroyu cekip aksan/kisaltmadan bagimsiz kendimiz filtreliyoruz
-        // (API'nin kendi arama parametresi aksanli isimlerde -orn "Kante" ile "Kanté"- eslesme kacirabiliyor)
-        let page=1, totalPages=1, squad=[];
-        do{
-          const resp = await apiFetchFull('/players', {team:teamId, season:searchSeason, page});
-          squad = squad.concat(resp.response);
-          totalPages = resp.paging ? resp.paging.total : 1;
-          page++;
-        } while(page<=totalPages && page<=4);
-        // "harry kane" gibi cok kelimeli aramada, her kelimenin isimde AYRI AYRI gecmesi yeterli
-        // (bitisik substring aramasi orta isimli oyuncularda -orn "Harry Edward Kane"- kaciriyordu)
-        const qWords = normalizeName(q).split(/\s+/).filter(Boolean);
-        players = squad.filter(pl=>{
-          const nf = normalizeName(pl.player.name);
-          return qWords.every(w=> nf.includes(w));
-        });
-      } else if(leagueId){
-        players = await searchWithFallback(q, {league:leagueId, season:searchSeason});
-      } else {
-        // hicbir sey secilmemisse: API tek basina isim aramasini kabul etmiyor,
-        // bu yuzden Scout Ligleri listeni + takip ettigin takimlarin liglerinde otomatik ariyoruz
-        const scoutLeagues = await getScoutLeagues();
-        const followedLeagueIds = state.followed.filter(t=>t.league && t.league.id).map(t=>t.league.id);
-        const searchLeagueIds = [...new Set([...scoutLeagues.map(l=>l.id), ...followedLeagueIds])];
-        if(!searchLeagueIds.length){
-          results.innerHTML = '<div class="empty display">Henüz arama kapsamın boş</div><p style="text-align:center;color:var(--chalk-dim);font-size:12px;">Yukarıdan ülke + lig seçip "Scout Listeme Ekle" ile kalıcı ekle (takip etmene gerek yok), ya da birkaç takım takip et.</p>';
-          return;
-        }
-        const resArr = await Promise.allSettled(searchLeagueIds.map(lid=>searchWithFallback(q, {league:lid, season:searchSeason})));
-        const merged = [];
-        const seenIds = new Set();
-        resArr.forEach(r=>{
-          if(r.status!=='fulfilled') return;
-          r.value.forEach(pl=>{ if(!seenIds.has(pl.player.id)){ seenIds.add(pl.player.id); merged.push(pl); } });
-        });
-        players = merged;
-      }
-      if(!players.length){ results.innerHTML = '<div class="empty display">Sonuç Yok</div><p style="text-align:center;color:var(--chalk-dim);font-size:12px;">Farklı bir sezon yılı ya da isim dene. En güvenilir sonuç için sadece soyadıyla ara (örn. "Kane" yerine "Harry Kane" değil). Ya da aradığın oyuncu Scout Ligleri kapsamında değilse, yukarıdan doğru ülke/ligi seçip listene ekle.</p>'; return; }
-      results.innerHTML = players.slice(0,25).map(pl=>{
+    }
+    if(teams.length){
+      html += `<h3 style="font-size:13px; color:var(--chalk-dim); margin:14px 0 6px;">🛡️ Takımlar</h3><div class="grid" id="teamSearchGrid"></div>`;
+    }
+    if(coaches.length){
+      html += `<h3 style="font-size:13px; color:var(--chalk-dim); margin:14px 0 6px;">🎓 Teknik Direktörler</h3>` + coaches.slice(0,15).map(c=>`
+        <div class="card dossier coach-row" data-opencoach="${c.id}" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <img loading="lazy" decoding="async" src="${c.photo||''}" onerror="this.style.visibility='hidden'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+          <div><b>${esc(c.name)}</b><br><span style="font-size:11.5px; color:var(--chalk-dim);">${esc(c.nationality||'')}${c.age? ' · '+c.age+' yaş':''}${c.team && c.team.name? ' · '+esc(c.team.name):''}</span></div>
+        </div>
+      `).join('');
+    }
+    if(players.length){
+      html += `<h3 style="font-size:13px; color:var(--chalk-dim); margin:14px 0 6px;">⚽ Oyuncular</h3>` + players.slice(0,25).map(pl=>{
         const st = pickPrimaryStats(pl.statistics);
         const teamInfo = st.team || {};
         return `
@@ -2989,7 +2979,36 @@ async function runDiscoverSearch(){
           ${teamInfo.name? `<span class="stat-chip">${esc(teamInfo.name)}</span>` : ''}
         </div>
       `;}).join('');
-      document.querySelectorAll('[data-openplayer]').forEach(row=>{
+    }
+    results.innerHTML = html;
+
+    if(leagues.length){
+      results.querySelectorAll('.league-row').forEach(row=>{
+        row.onclick = ()=> showLeagueTeams(row.getAttribute('data-lid'), row.getAttribute('data-lname'), row.getAttribute('data-llogo'), results);
+      });
+      results.querySelectorAll('.add-scout-league-btn').forEach(btn=>{
+        btn.onclick = async (e)=>{
+          e.stopPropagation();
+          await addScoutLeague({id:parseInt(btn.getAttribute('data-lid'),10), name:btn.getAttribute('data-lname'), logo:btn.getAttribute('data-llogo')});
+          btn.textContent = 'Eklendi ✓';
+          btn.disabled = true;
+        };
+      });
+    }
+    if(teams.length){
+      renderTeamGrid(teams.map(t=>t.team), results.querySelector('#teamSearchGrid'));
+    }
+    if(coaches.length){
+      results.querySelectorAll('[data-opencoach]').forEach(row=>{
+        row.onclick = ()=>{
+          const cid = parseInt(row.getAttribute('data-opencoach'),10);
+          const c = coaches.find(x=>x.id===cid);
+          if(c) openCoachModal(c);
+        };
+      });
+    }
+    if(players.length){
+      results.querySelectorAll('[data-openplayer]').forEach(row=>{
         row.onclick = ()=>{
           const pid = row.getAttribute('data-openplayer');
           const pl = players.find(x=>String(x.player.id)===pid);

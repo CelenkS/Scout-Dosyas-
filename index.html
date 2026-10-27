@@ -7865,6 +7865,7 @@ async function renderNotesReview(content){
     <div class="subtabs" id="notesSubtabs" style="margin-bottom:14px;">
       <button data-t="notes" class="active">Notlarım</button>
       <button data-t="watched">👁️ İzlediklerim</button>
+      <button data-t="dev">🎓 Gelişimim</button>
     </div>
     <div id="notesSubtabBody"></div>
   `;
@@ -7876,7 +7877,8 @@ async function renderNotesReview(content){
       btn.classList.add('active');
       const t = btn.getAttribute('data-t');
       if(t==='notes') renderMyNotesTab(body);
-      else renderWatchedTab(body);
+      else if(t==='watched') renderWatchedTab(body);
+      else renderDevTab(body);
     };
   });
 }
@@ -8070,6 +8072,158 @@ async function renderMyNotesTab(content){
       if(delKind) await deleteQuickNoteAll(delKind, delId);
       else if(delType) await deleteNoteRecord(delType, delId);
       renderMyNotesTab(content);
+    };
+  });
+}
+
+// ---------- teknik direktörlük gelişim takibi ----------
+const DEV_ROADMAP_STEPS = [
+  {key:'temel', label:'Temel Eğitim (Grassroots C)', hint:'Amatör sahalarda başlangıç — TFF\'nin açtığı temel antrenörlük kurslarıyla alınır.'},
+  {key:'uefac', label:'UEFA C Lisansı', hint:'Antrenörlüğe resmi giriş kapısı — alt yaş gruplarında / amatörde çalışma yetkisi verir.'},
+  {key:'uefab', label:'UEFA B Lisansı', hint:'Profesyonel takımlarda yardımcı antrenörlük için gerekir.'},
+  {key:'uefaa', label:'UEFA A Lisansı', hint:'Teknik direktörlüğe geçiş basamağı — alt liglerde teknik sorumlu olabilirsin.'},
+  {key:'uefapro', label:'UEFA Pro Lisansı', hint:'En üst seviye — Süper Lig ve Avrupa kupalarında teknik direktörlük için şart.'}
+];
+const DEV_STATUS_ORDER = ['none','planned','inprogress','done'];
+const DEV_STATUS_META = {
+  none: {label:'Henüz başlamadım', color:'var(--ink2)'},
+  planned: {label:'Planlıyorum', color:'#8a8f98'},
+  inprogress: {label:'Devam ediyor', color:'#D98C2B'},
+  done: {label:'Tamamladım', color:'var(--good, #2E9E5B)'}
+};
+function nextDevStatus(s){
+  const i = DEV_STATUS_ORDER.indexOf(s||'none');
+  return DEV_STATUS_ORDER[(i+1) % DEV_STATUS_ORDER.length];
+}
+async function getDevRoadmap(){
+  try{
+    const r = await store.get('devroadmap');
+    if(!r || !r.value) return {};
+    try{ return JSON.parse(r.value) || {}; }catch(e){ return {}; }
+  }catch(e){ return {}; }
+}
+async function setDevRoadmap(map){
+  try{ await store.set('devroadmap', JSON.stringify(map)); return true; }catch(e){ return false; }
+}
+async function listDevNotes(){
+  try{
+    const r = await store.list('devnote:');
+    if(!r || !r.keys) return [];
+    const out = [];
+    for(const k of r.keys){
+      const v = await store.get(k);
+      if(v && v.value){ try{ out.push({id:k.split(':').pop(), ...JSON.parse(v.value)}); }catch(e){} }
+    }
+    out.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+    return out;
+  }catch(e){ return []; }
+}
+async function addDevNote(text){
+  const id = 'dn'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  try{ await store.set('devnote:'+id, JSON.stringify({text, done:false, date:new Date().toISOString()})); return true; }catch(e){ return false; }
+}
+async function toggleDevNoteDone(id, cur){
+  try{
+    const r = await store.get('devnote:'+id);
+    if(!r || !r.value) return false;
+    const parsed = JSON.parse(r.value);
+    parsed.done = !cur;
+    await store.set('devnote:'+id, JSON.stringify(parsed));
+    return true;
+  }catch(e){ return false; }
+}
+async function deleteDevNote(id){
+  try{ await store.delete('devnote:'+id); return true; }catch(e){ return false; }
+}
+async function renderDevTab(content){
+  content.innerHTML = '<div class="loading">Gelişim bilgileri yükleniyor...</div>';
+  const [roadmap, notes] = await Promise.all([getDevRoadmap(), listDevNotes()]);
+  content.innerHTML = `
+    <div class="card dossier" style="margin-bottom:18px;">
+      <h3 style="font-size:15px; margin:0 0 4px; color:var(--chalk);">🎓 Teknik Direktörlük Yolu</h3>
+      <p style="font-size:12px; color:var(--ink2); margin:0 0 12px;">Her basamağa dokunup durumunu değiştir (Henüz başlamadım → Planlıyorum → Devam ediyor → Tamamladım). Güncel başvuru tarihleri/şartları için <a href="https://www.tff.org/default.aspx?pageID=1014" target="_blank" rel="noopener" style="color:var(--gold);">tff.org Antrenör Eğitim Programları</a> sayfasını kontrol et — kurs dönemleri ve ücretler yıldan yıla değişiyor.</p>
+      ${DEV_ROADMAP_STEPS.map((step,i)=>{
+        const st = roadmap[step.key] || {};
+        const status = st.status || 'none';
+        const meta = DEV_STATUS_META[status];
+        return `
+        <div class="note-review-row dev-step-row" data-key="${step.key}" style="cursor:pointer;">
+          <span class="badge" style="background:${meta.color}; color:#fff; min-width:18px; text-align:center;">${i+1}</span>
+          <div class="nbody">
+            <b>${esc(step.label)}</b>
+            <p>${esc(step.hint)}</p>
+            ${st.note? `<p style="color:var(--chalk); margin-top:4px;">📝 ${esc(st.note)}</p>` : ''}
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+            <span class="badge" style="background:${meta.color}; color:#fff;">${meta.label}</span>
+            <button class="follow-btn dev-step-note-btn" data-key="${step.key}" style="padding:3px 8px; font-size:11px;">✏️ Not</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card dossier">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+        <h3 style="font-size:14px; margin:0; color:var(--chalk);">Hedef &amp; Taktik Notlarım ${notes.length? '('+notes.length+')':''}</h3>
+      </div>
+      <div class="q-field" style="display:flex; gap:8px; margin-bottom:12px;">
+        <input type="text" id="devNoteInput" placeholder="Örn. Bu hafta 4-3-3 geçiş oyunu üzerine okuma yap" style="flex:1;">
+        <button class="follow-btn" id="devNoteAddBtn" style="background:var(--gold); color:var(--accent-ink); white-space:nowrap;">+ Ekle</button>
+      </div>
+      ${notes.length? notes.map(n=>`
+        <div class="note-review-row">
+          <span class="badge dev-note-check" data-id="${n.id}" data-done="${n.done?1:0}" style="background:${n.done?'var(--good, #2E9E5B)':'var(--ink2)'}; color:#fff; cursor:pointer;">${n.done?'✓':''}</span>
+          <div class="nbody"><p style="${n.done?'text-decoration:line-through; opacity:.6;':''}">${esc(n.text)}</p></div>
+          <div class="ndate">${timeAgo(n.date)}</div>
+          <button class="follow-btn dev-note-del-btn" data-id="${n.id}" style="margin-left:6px; background:var(--bad); color:#fff; padding:5px 9px;" title="Sil">🗑</button>
+        </div>`).join('') : '<p style="font-size:12.5px; color:var(--ink2);">Henüz not yok — hedeflerini, okuduğun taktik fikirlerini ya da izlediğin antrenörlerden aldığın notları buraya ekle.</p>'}
+    </div>
+  `;
+  content.querySelectorAll('.dev-step-row').forEach(row=>{
+    row.onclick = async (e)=>{
+      if(e.target.closest('.dev-step-note-btn')) return;
+      const key = row.getAttribute('data-key');
+      const map = await getDevRoadmap();
+      const cur = map[key] || {};
+      cur.status = nextDevStatus(cur.status);
+      map[key] = cur;
+      await setDevRoadmap(map);
+      renderDevTab(content);
+    };
+  });
+  content.querySelectorAll('.dev-step-note-btn').forEach(btn=>{
+    btn.onclick = async (e)=>{
+      e.stopPropagation();
+      const key = btn.getAttribute('data-key');
+      const map = await getDevRoadmap();
+      const cur = map[key] || {};
+      const txt = prompt('Bu basamak için not (örn. hangi kursa başvurdun, ne zaman):', cur.note||'');
+      if(txt===null) return;
+      cur.note = txt.trim();
+      map[key] = cur;
+      await setDevRoadmap(map);
+      renderDevTab(content);
+    };
+  });
+  const addBtn = content.querySelector('#devNoteAddBtn');
+  const input = content.querySelector('#devNoteInput');
+  const doAdd = async ()=>{
+    const txt = (input.value||'').trim();
+    if(!txt) return;
+    await addDevNote(txt);
+    renderDevTab(content);
+  };
+  if(addBtn) addBtn.onclick = doAdd;
+  if(input) input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doAdd(); });
+  content.querySelectorAll('.dev-note-check').forEach(el=>{
+    el.onclick = async ()=>{
+      await toggleDevNoteDone(el.getAttribute('data-id'), el.getAttribute('data-done')==='1');
+      renderDevTab(content);
+    };
+  });
+  content.querySelectorAll('.dev-note-del-btn').forEach(btn=>{
+    btn.onclick = async ()=>{
+      await deleteDevNote(btn.getAttribute('data-id'));
+      renderDevTab(content);
     };
   });
 }

@@ -22,6 +22,15 @@ eski "FM tarzı" 1-20 sayısal puanlama da kaldırıldı; yerine 4 kademeli keli
 seviyesi (Zayıf / Orta / İyi / Çok İyi) geldi — eski sayısal kayıtlar açıldığında
 otomatik olarak en yakın seviyeye çevriliyor.
 
+Maç detay ekranı artık masaüstünde tam ekran açılıyor (eskiden dar bir panel
+olarak sağda açılıp etrafı boş kalıyordu); henüz başlamamış maçlarda varsayılan
+sekme her zaman **Kadrolar** (ilk 11) oluyor. Bir takımın kendi maç geçmişi
+listesinde (ve diğer tüm maç listelerinde) artık her satırda küçük bir lig/kupa
+rozeti var, böylece hangi turnuvada oynandığı ay başlıklarının altında karışmadan
+görülebiliyor. Oyuncu detay kartının tasarımı yenilendi: gradyanlı başlık,
+fotoğraf etrafında altın halka, renkli ikonlu istatistik kutuları ve kulüp
+rozetli kariyer tablosu.
+
 - Canlı adres: GitHub Pages (Settings → Pages → main / root)
 - Telefona kurulum: adresi Safari'de aç → Paylaş → **Ana Ekrana Ekle**
 - API anahtarı koda gömülü değildir; uygulamada Ayarlar'dan girilir (giriş yapınca buluttan gelir).

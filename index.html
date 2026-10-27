@@ -114,7 +114,7 @@ a{color:var(--accent)}
 .hcard .hs{font:600 12.5px var(--font-ui);color:rgba(255,255,255,.75);margin-top:5px}
 .hcard .hs b{color:var(--ac)}
 .hcard .go{flex:0 0 auto;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 22px/1 var(--font-ui);padding-bottom:2px;color:var(--ac);background:color-mix(in srgb,var(--ac) 16%,transparent)}
-.hcard.c-mac{--ac:#2EC4C6}.hcard.c-kes{--ac:#5EA6E6}.hcard.c-tak{--ac:#46C88C}.hcard.c-oyu{--ac:#A78BFA}.hcard.c-pua{--ac:#F0A04B}.hcard.c-not{--ac:#FACC15}
+.hcard.c-mac{--ac:#2EC4C6}.hcard.c-kes{--ac:#5EA6E6}.hcard.c-tak{--ac:#46C88C}.hcard.c-oyu{--ac:#A78BFA}.hcard.c-pua{--ac:#F0A04B}.hcard.c-not{--ac:#FACC15}.hcard.c-soz{--ac:#E8674F}
 .hcards .hcard:nth-child(2){animation-delay:.04s}.hcards .hcard:nth-child(3){animation-delay:.08s}.hcards .hcard:nth-child(4){animation-delay:.12s}.hcards .hcard:nth-child(5){animation-delay:.16s}.hcards .hcard:nth-child(6){animation-delay:.2s}
 @keyframes hcin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.hcard{animation:none}*{transition:none!important}}
@@ -274,10 +274,12 @@ details.scout-group summary::-webkit-details-marker{display:none}
 details.scout-group summary::after{content:"›";font:700 20px/1 var(--font-ui);color:var(--ink2);transition:transform .15s}
 details.scout-group[open] summary::after{transform:rotate(90deg)}
 details.scout-group[open] summary{border-bottom:1px solid var(--line);margin-bottom:8px}
-.attr-row{display:flex;align-items:center;gap:10px;padding:6px 0}
-.attr-row label{flex:1;font-size:13px;min-width:0;font-weight:600}
-.attr-row input[type=range]{flex:1.4;accent-color:var(--accent)}
-.attr-row .attr-val{width:30px;text-align:center;font:800 12.5px var(--font-num);background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:3px 0}
+.attr-row{display:flex;align-items:center;gap:8px;padding:7px 0;flex-wrap:wrap}
+.attr-row label{flex:1 1 100%;font-size:13px;min-width:0;font-weight:600}
+.attr-levels{display:flex;gap:4px;flex:1 1 100%}
+.attr-level-btn{flex:1;padding:7px 4px;border-radius:7px;border:1.5px solid var(--line);background:var(--soft2);color:var(--ink2);font:800 11px var(--font-ui);cursor:pointer;transition:all .12s;text-align:center}
+.attr-level-btn:hover{border-color:var(--accent)}
+.attr-level-btn.active{color:#fff;border-color:transparent}
 .q-field{margin-bottom:14px}
 .q-field label{display:block;font:800 13px var(--font-ui);margin-bottom:6px}
 .q-field textarea,.q-field input[type=text],.q-field select{width:100%;min-height:52px;border-radius:14px;border:1.5px solid var(--line);padding:10px 12px;font:500 14.5px var(--font-ui);resize:vertical;background:var(--soft2);color:var(--ink)}
@@ -436,7 +438,7 @@ h1,h2,h3,.display{letter-spacing:-.02em}
 .hcard .hn{font:800 17px var(--font-ui);letter-spacing:-.02em}
 .hcard .hs{color:var(--ink2);font-size:12px}
 .hcard .go{position:absolute;top:14px;right:14px;width:28px;height:28px;font-size:18px;background:var(--soft);color:var(--ink2)}
-.hcard.c-mac{--ac:#0BA360}.hcard.c-not{--ac:#E3A008}.hcard.c-tak{--ac:#4F6BF5}.hcard.c-oyu{--ac:#9E77ED}.hcard.c-kes{--ac:#06AED4}.hcard.c-pua{--ac:#F38744}
+.hcard.c-mac{--ac:#0BA360}.hcard.c-not{--ac:#E3A008}.hcard.c-tak{--ac:#4F6BF5}.hcard.c-oyu{--ac:#9E77ED}.hcard.c-kes{--ac:#06AED4}.hcard.c-pua{--ac:#F38744}.hcard.c-soz{--ac:#D9455F}
 /* canlı şerit */
 .livestrip{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:2px 16px 4px;scroll-snap-type:x mandatory}
 .livestrip::-webkit-scrollbar{display:none}
@@ -2444,6 +2446,7 @@ const ICONS = {
   myplayers:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></svg>',
   standings:'<svg viewBox="0 0 24 24"><path d="M8 21V11M12 21V5M16 21v-7M4 21h16"/></svg>',
   notes:'<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h5"/></svg>',
+  sozluk:'<svg viewBox="0 0 24 24"><path d="M4 19.5V5.5A2 2 0 0 1 6 3.5h12a1 1 0 0 1 1 1v14.5"/><path d="M6 21.5h13"/><path d="M6 21.5a2 2 0 1 1 0-4h13v4"/><path d="M8 7.5h7M8 10.5h5"/></svg>',
   settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
   send:'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 };
@@ -2455,6 +2458,7 @@ const VIEW_META = {
   myplayers:{label:'Oyuncular', title:'Oyuncularım'},
   standings:{label:'Puan', title:'Puan Durumu', sub:'Lig tabloları ve krallıklar'},
   notes:{label:'Notlar', title:'Notlarım', sub:'Scout formların, puanların, izlediklerin'},
+  sozluk:{label:'Sözlük', title:'Taktik Sözlüğü', sub:'Half space, gegenpress ve daha fazlası — tüm taktik terimler bir arada'},
   team:{label:'Takım', title:'Takım Detayı'}
 };
 function goView(v){
@@ -2494,6 +2498,7 @@ function render(){
   else if(state.view==='team') renderTeamDetail(content);
   else if(state.view==='standings') renderStandings(content);
   else if(state.view==='notes') renderNotesReview(content);
+  else if(state.view==='sozluk') renderGlossary(content);
 }
 
 function renderHeader(){
@@ -2507,7 +2512,7 @@ function renderHeader(){
   if(v==='myteams') sub = state.followed.length+' takım takip ediyorsun';
   if(v==='myplayers') sub = state.followedPlayers.length+' oyuncu takip ediyorsun';
   if(v==='team' && state.currentTeam){ title = state.currentTeam.name || 'Takım'; sub = 'Takım dosyası'; }
-  const tabs = ['matches','discover','myteams','myplayers','standings','notes'];
+  const tabs = ['matches','discover','myteams','myplayers','standings','notes','sozluk'];
   if(v==='team') tabs.push('team');
   const noteCount = countNoteKeysSync();
   return `
@@ -2548,9 +2553,9 @@ function renderNav(){
 }
 function navScript(){ return ''; }
 function renderSideNav(){
-  const items = ['home','matches','discover','myteams','myplayers','standings','notes'];
+  const items = ['home','matches','discover','myteams','myplayers','standings','notes','sozluk'];
   const cur = state.view==='team' ? 'myteams' : state.view;
-  return '<aside class="sidenav"><div class="brand"><span>⚽</span>Scout Dosyası</div>'+items.map(k=>`<button data-go="${k}" class="${cur===k?'active':''}">${ICONS[k]}${esc(k==='standings'?'Puan Durumu':k==='myteams'?'Takımlarım':k==='myplayers'?'Oyuncularım':k==='notes'?'Notlarım':VIEW_META[k].label)}</button>`).join('')+'<div class="grow"></div><button id="sideSettings">'+ICONS.settings+'Ayarlar</button></aside>';
+  return '<aside class="sidenav"><div class="brand"><span>⚽</span>Scout Dosyası</div>'+items.map(k=>`<button data-go="${k}" class="${cur===k?'active':''}">${ICONS[k]}${esc(k==='standings'?'Puan Durumu':k==='myteams'?'Takımlarım':k==='myplayers'?'Oyuncularım':k==='notes'?'Notlarım':k==='sozluk'?'Taktik Sözlüğü':VIEW_META[k].label)}</button>`).join('')+'<div class="grow"></div><button id="sideSettings">'+ICONS.settings+'Ayarlar</button></aside>';
 }
 function renderNavCountOnly(){
   const h = document.querySelector('.hero .hsub');
@@ -2575,7 +2580,8 @@ async function renderHome(content, opts){
     ['myteams','c-tak','Takip','Takımlarım', state.followed.length? '<b>'+state.followed.length+'</b> takım takipte' : 'Henüz takım eklemedin'],
     ['myplayers','c-oyu','Takip','Oyuncularım', state.followedPlayers.length? '<b>'+state.followedPlayers.length+'</b> oyuncu takipte' : 'Henüz oyuncu eklemedin'],
     ['discover','c-kes','Ara · bul','Keşfet','Lig, takım ve oyuncu arama'],
-    ['standings','c-pua','Tablolar','Puan Durumu','Lig sıralaması ve krallıklar']
+    ['standings','c-pua','Tablolar','Puan Durumu','Lig sıralaması ve krallıklar'],
+    ['sozluk','c-soz','Öğren','Taktik Sözlüğü','Half space, gegenpress... 90+ terim']
   ];
   const cardsHtml = `<div class="hcards">${cards.map(([k,c,hk,hn,hs])=>`
     <button type="button" class="hcard ${c}" data-go="${k}"><span class="hic">${ICONS[k]}</span><div><div class="hk">${hk}</div><div class="hn">${hn}</div><div class="hs">${hs}</div></div><span class="go">›</span></button>`).join('')}</div>`;
@@ -3929,10 +3935,6 @@ function openMatchPlayerNoteModal(fx, playerId, playerName, triggerBtn, posKey){
           ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<span class="mp-rating-dot" data-n="${n}" style="width:22px; height:22px; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:10px; font-family:var(--font-num);font-variant-numeric:tabular-nums;font-weight:700; font-weight:700; background:rgba(0,0,0,0.06); color:var(--ink2);">${n}</span>`).join('')}
         </div>
       </div>
-      <div style="margin-bottom:10px;">
-        <label id="mpPosQuestionsLabel" style="display:block; font-size:12px; font-weight:700; margin-bottom:5px;"></label>
-        <div id="mpPosQuestions"></div>
-      </div>
       <textarea id="mpNoteText" style="width:100%; min-height:90px; border-radius:8px; border:1px solid var(--line); padding:8px; font-family:var(--font-ui); font-size:13px; resize:vertical; background:var(--soft2);" placeholder="Ek not..."></textarea>
       <div class="save-row"><button id="mpNoteSave">Kaydet</button><span class="saved-flash" id="mpNoteFlash">Kaydedildi ✓</span></div>
     </div>
@@ -3942,7 +3944,6 @@ function openMatchPlayerNoteModal(fx, playerId, playerName, triggerBtn, posKey){
   overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
   const key = fx.fixture.id+'_'+playerId;
   let selectedRating = null;
-  let savedPosAnswers = null; // sadece ilk yuklemede eski cevaplari geri doldurmak icin
   function paintDots(){
     overlay.querySelectorAll('.mp-rating-dot').forEach(dot=>{
       const n = parseInt(dot.getAttribute('data-n'),10);
@@ -3958,38 +3959,23 @@ function openMatchPlayerNoteModal(fx, playerId, playerName, triggerBtn, posKey){
       paintDots();
     };
   });
-  function renderPosQuestions(useSavedAnswers){
-    const currentPosKey = overlay.querySelector('#mpPosSelect').value;
-    const data = POSITION_SCOUT_DATA[currentPosKey];
-    overlay.querySelector('#mpPosQuestionsLabel').textContent = '🎯 '+data.label+' — Bu Maçta';
-    const box = overlay.querySelector('#mpPosQuestions');
-    const answersToUse = (useSavedAnswers && savedPosAnswers) ? savedPosAnswers : {};
-    box.innerHTML = data.questions.map(([qkey,qlabel,qchips])=> scoutChipFieldHtml(qkey,qlabel,'',qchips,answersToUse[qkey])).join('');
-    wireScoutChips(box);
-  }
-  renderPosQuestions(false);
-  overlay.querySelector('#mpPosSelect').addEventListener('change', ()=> renderPosQuestions(false));
   getNotePayload('matchplayer', key).then(existing=>{
     const ta = overlay.querySelector('#mpNoteText');
     const p = (existing && existing.payload) || {};
     if(p.note) ta.value = p.note;
     if(p.rating!==undefined && p.rating!==null){ selectedRating = p.rating; paintDots(); }
     if(p.posKey) overlay.querySelector('#mpPosSelect').value = p.posKey;
-    savedPosAnswers = p.posAnswers || null;
-    renderPosQuestions(true);
   });
   overlay.querySelector('#mpNoteSave').onclick = async ()=>{
     const note = overlay.querySelector('#mpNoteText').value;
     const finalPosKey = overlay.querySelector('#mpPosSelect').value;
-    const posBox = overlay.querySelector('#mpPosQuestions');
-    const posAnswers = posBox ? collectChipAnswers(posBox) : null;
     const meta = {label: playerName+' · '+fx.teams.home.name+' - '+fx.teams.away.name, date: fx.fixture.date, playerPhoto:`https://media.api-sports.io/football/players/${playerId}.png`};
-    const ok = await setNotePayload('matchplayer', key, {note, rating:selectedRating, posKey:finalPosKey, posAnswers}, meta);
+    const ok = await setNotePayload('matchplayer', key, {note, rating:selectedRating, posKey:finalPosKey}, meta);
     const flash = overlay.querySelector('#mpNoteFlash');
     if(ok){
       flash.classList.add('show'); setTimeout(()=>flash.classList.remove('show'),1400);
       if(triggerBtn){
-        const hasContent = note.trim() || selectedRating!==null || (posAnswers && Object.values(posAnswers).some(v=>v && v.trim()));
+        const hasContent = note.trim() || selectedRating!==null;
         if(hasContent){ triggerBtn.style.background = 'var(--gold)'; triggerBtn.style.color = 'var(--ink)'; }
         else { triggerBtn.style.background = ''; triggerBtn.style.color = ''; }
       }
@@ -6567,43 +6553,59 @@ async function renderTacticsBoard(team, container){
 
 
 
+// eskiden FM tarzi 1-20 sayisal puandi; artik 4 kademeli kelime seviyesi kullaniyoruz
+const ATTR_LEVELS = [
+  {n:1, label:'Zayıf'},
+  {n:2, label:'Orta'},
+  {n:3, label:'İyi'},
+  {n:4, label:'Çok İyi'}
+];
+function attrLevelLabel(n){
+  const lvl = ATTR_LEVELS.find(l=> l.n===Math.round(n));
+  return lvl ? lvl.label : ATTR_LEVELS[1].label;
+}
+// eski kayitlarda 1-20 araliginda sayisal puan olabilir; bunu yeni 1-4 seviyeye cevirir
+function normalizeAttrLevel(v){
+  if(v===undefined || v===null || isNaN(v)) return 2; // varsayilan: Orta
+  if(v<=4) return Math.max(1, Math.round(v));
+  return Math.max(1, Math.min(4, Math.ceil(v/5)));
+}
+
 function attrRowsHtml(attrs, saved){
   return attrs.map(([key,label])=>{
-    const val = (saved && saved[key]!==undefined) ? saved[key] : 10;
+    const val = normalizeAttrLevel(saved && saved[key]);
     return `
-      <div class="attr-row">
+      <div class="attr-row" data-attr-row="${key}">
         <label>${esc(label)}</label>
-        <input type="range" min="1" max="20" value="${val}" data-attr="${key}">
-        <input type="number" min="1" max="20" value="${val}" data-attr-num="${key}" style="width:38px; text-align:center; border-radius:5px; border:1px solid var(--line); font-family:var(--font-num);font-variant-numeric:tabular-nums;font-weight:700; font-size:12px;">
-        <span class="attr-val" style="background:${scoreColor(val,20)}; color:#fff;">${val}</span>
+        <div class="attr-levels">
+          ${ATTR_LEVELS.map(l=> `<button type="button" class="attr-level-btn ${l.n===val?'active':''}" data-attr="${key}" data-level="${l.n}" style="${l.n===val? `background:${scoreColor(l.n,4)};` : ''}">${l.label}</button>`).join('')}
+        </div>
       </div>
     `;
   }).join('');
 }
 
 function wireAttrRows(container, onChange){
-  container.querySelectorAll('[data-attr]').forEach(input=>{
-    const key = input.getAttribute('data-attr');
-    const numInput = container.querySelector('[data-attr-num="'+key+'"]');
-    const badge = input.nextElementSibling.nextElementSibling;
-    function apply(v){
-      v = Math.max(1, Math.min(20, v));
-      input.value = v; numInput.value = v;
-      badge.textContent = v;
-      badge.style.background = scoreColor(v, 20);
-      badge.style.color = '#fff';
+  container.querySelectorAll('.attr-level-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const key = btn.getAttribute('data-attr');
+      const row = container.querySelector('[data-attr-row="'+key+'"]') || btn.closest('[data-attr-row]');
+      row.querySelectorAll('.attr-level-btn').forEach(b=>{
+        const active = b===btn;
+        const n = parseInt(b.getAttribute('data-level'),10);
+        b.classList.toggle('active', active);
+        b.style.background = active ? scoreColor(n,4) : '';
+      });
       onChange();
-    }
-    input.addEventListener('input', ()=> apply(parseInt(input.value,10)));
-    numInput.addEventListener('input', ()=>{ const v = parseInt(numInput.value,10); if(!isNaN(v)) apply(v); });
+    };
   });
 }
 
 function collectAttrs(container, attrs){
   const out = {};
   attrs.forEach(([key])=>{
-    const el = container.querySelector('[data-attr="'+key+'"]');
-    out[key] = el ? parseInt(el.value,10) : 10;
+    const active = container.querySelector('.attr-level-btn.active[data-attr="'+key+'"]');
+    out[key] = active ? parseInt(active.getAttribute('data-level'),10) : 2;
   });
   return out;
 }
@@ -7029,8 +7031,8 @@ async function openPlayerModal(p, team, initialSeason, matchCtx){
       <h3 style="font-size:14px; margin-top:16px;">Kupalar / Onurlar</h3>
       <div id="pTrophyBox" class="card dossier"><div class="loading">Yükleniyor...</div></div>
 
-      <h3 style="font-size:14px; margin-top:16px;">FM Tarzı Scout Puanlaması</h3>
-      <div class="overall-badge"><div><div class="num" id="pOverall">--</div></div><div class="lbl">Genel Puan<br>(20 üzerinden)</div></div>
+      <h3 style="font-size:14px; margin-top:16px;">Scout Değerlendirmesi</h3>
+      <div class="overall-badge"><div><div class="num" id="pOverall" style="font-size:19px; white-space:nowrap;">--</div></div><div class="lbl">Genel Değerlendirme</div></div>
 
       <details class="scout-group" open>
         <summary>Teknik</summary>
@@ -7422,13 +7424,15 @@ async function openPlayerModal(p, team, initialSeason, matchCtx){
     ];
     const avg = all.reduce((a,b)=>a+b,0)/all.length;
     const badge = overlay.querySelector('.overall-badge');
-    overlay.querySelector('#pOverall').textContent = avg.toFixed(1);
-    badge.style.background = scoreColor(avg,20);
+    const overallEl = overlay.querySelector('#pOverall');
+    overallEl.textContent = attrLevelLabel(avg);
+    overallEl.dataset.avg = avg.toFixed(2);
+    badge.style.background = scoreColor(avg,4);
   }
   function collectAttrs2(root, attrs){
     return attrs.map(([key])=>{
-      const el = root.querySelector('[data-attr="'+key+'"]');
-      return el ? parseInt(el.value,10) : 10;
+      const active = root.querySelector('.attr-level-btn.active[data-attr="'+key+'"]');
+      return active ? parseInt(active.getAttribute('data-level'),10) : 2;
     });
   }
 
@@ -7462,7 +7466,8 @@ async function openPlayerModal(p, team, initialSeason, matchCtx){
       comment: questionAnswers.comment || ''
     };
     if(isGK) payload.gk = collectAttrs(overlay, GK_ATTRS);
-    payload.overall = parseFloat(overlay.querySelector('#pOverall').textContent);
+    payload.overall = parseFloat(overlay.querySelector('#pOverall').dataset.avg || '2'); // 1-4 seviye ortalamasi
+    payload.overallLabel = attrLevelLabel(payload.overall);
     const meta = {label:p.player.name, team: team ? team.name : ''};
     const ok = await setNotePayload('player', p.player.id, payload, meta);
     const flash = overlay.querySelector('#pFlash');
@@ -8028,11 +8033,14 @@ async function renderMyNotesTab(content){
       </div>`).join('')}</div>` : ''}
     ${plNotes.length? `<h3 style="color:var(--chalk); font-size:15px; margin:16px 0 8px;">Oyuncu Scout Formları (${plNotes.length})</h3><div class="card dossier">${plNotes.map(n=>{
       const p = n.payload||{};
-      const preview = (p.comment && p.comment.trim()) ? p.comment : 'Genel puan '+(p.overall ?? '-')+'/20';
+      const hasOverall = p.overall!==undefined && p.overall!==null;
+      const overallLvl = hasOverall ? normalizeAttrLevel(p.overall) : null;
+      const overallLabel = p.overallLabel || (overallLvl? attrLevelLabel(overallLvl) : null);
+      const preview = (p.comment && p.comment.trim()) ? p.comment : (overallLabel? 'Genel değerlendirme: '+overallLabel : 'Değerlendirilmedi');
       const id = n.key.split(':').pop();
       return `
       <div class="note-review-row note-open-player" data-pid="${id}" style="cursor:pointer;">
-        <span class="badge" style="background:${p.overall!==undefined?scoreColor(p.overall,20):'var(--ink2)'}; color:#fff;">${p.overall!==undefined? p.overall.toFixed(1)+'/20' : ''}</span>
+        <span class="badge" style="background:${overallLvl?scoreColor(overallLvl,4):'var(--ink2)'}; color:#fff;">${overallLabel||''}</span>
         <div class="nbody"><b>${esc((n.meta&&n.meta.label)||'Oyuncu')}</b><p>${esc(preview)}</p></div>
         <div class="ndate">${timeAgo(n.updatedAt)}</div>
         ${trashBtn('data-deltype="player" data-delid="'+id+'"')}
@@ -8226,6 +8234,150 @@ async function renderDevTab(content){
       renderDevTab(content);
     };
   });
+}
+
+// ---------- TAKTİK SÖZLÜĞÜ ----------
+const GLOSSARY_CATS = [
+  {key:'hucum', label:'⚔️ Hücum', icon:'⚔️', color:'#E8674F'},
+  {key:'savunma', label:'🛡️ Savunma', icon:'🛡️', color:'#2EC4C6'},
+  {key:'pres', label:'🔥 Pres & Geçiş', icon:'🔥', color:'#F0A04B'},
+  {key:'yapi', label:'🧩 Yapı & Diziliş', icon:'🧩', color:'#A78BFA'},
+  {key:'duran', label:'🚩 Duran Top', icon:'🚩', color:'#5EA6E6'},
+  {key:'genel', label:'📊 Genel & Analitik', icon:'📊', color:'#46C88C'}
+];
+const GLOSSARY_TERMS = [
+  {term:'Half Space (İç Koridor)', cat:'hucum', def:'Kanat çizgisi ile merkez koridor arasında kalan dar alan. Savunmanın en çok zorlandığı bölge olduğu için modern hücumun kalbi sayılır.'},
+  {term:'Overload (Sayısal Üstünlük)', cat:'hucum', def:'Sahanın bir bölgesine rakipten fazla oyuncu yığıp o bölgede sayısal avantaj kurmak.'},
+  {term:'Underload', cat:'hucum', def:'Bir tarafı bilerek az oyuncuyla bırakıp diğer tarafta sayısal üstünlük kurma; genelde "overload to isolate" ile birlikte kullanılır.'},
+  {term:'Third Man Run', cat:'hucum', def:'İki oyuncunun paslaştığı sırada üçüncü bir oyuncunun fark edilmeden boşluğa koşması.'},
+  {term:'Overlap (Dıştan Sarma)', cat:'hucum', def:'Kanatta bir oyuncunun, topu tutan takım arkadaşının dışından ileri atılması.'},
+  {term:'Underlap (İçten Sarma)', cat:'hucum', def:'Kanatta dıştaki oyuncunun, topu tutan arkadaşının içinden (half space\'ten) ileri atılması.'},
+  {term:'Inverted Winger (Ters Kanat)', cat:'hucum', def:'Sağ ayaklı bir oyuncunun sol kanatta, sol ayaklı bir oyuncunun sağ kanatta oynaması; içe kesip şut/pas açısı yaratır.'},
+  {term:'False 9 (Sahte Forvet)', cat:'hucum', def:'Santrforun klasik pozisyonundan geri çekilip orta sahaya yaklaşarak stoperleri "takip mi etsem" ikilemine düşürmesi.'},
+  {term:'Target Man (Hedef Adam)', cat:'hucum', def:'Fiziksel gücü ve hava topu becerisiyle uzun topları tutup takım arkadaşlarına indiren klasik santrfor tipi.'},
+  {term:'Poacher (Gol Avcısı)', cat:'hucum', def:'Oyun kurmaya az katılan, ceza sahası içinde doğru anda doğru yerde bulunarak gol üreten santrfor tipi.'},
+  {term:'Playmaker (Oyun Kurucu)', cat:'hucum', def:'Takımın hücum organizasyonunu yöneten, son pası genelde o veren oyuncu.'},
+  {term:'Regista', cat:'hucum', def:'Çok derinden, genelde 6 numara bölgesinden oyunu yönlendiren klasik İtalyan tipi oyun kurucu (örn. Pirlo).'},
+  {term:'Deep-Lying Playmaker (Derin Oyun Kurucu)', cat:'hucum', def:'Çok geriden, savunma hattına yakın bölgeden oyunu başlatan ve yönlendiren oyun kurucu tipi.'},
+  {term:'Advanced Playmaker (İleri Oyun Kurucu)', cat:'hucum', def:'Rakip ceza sahasına yakın bölgede oynayan, son pas ve gol katkısına daha fazla odaklanan oyun kurucu tipi.'},
+  {term:'Trequartista', cat:'hucum', def:'Forvet ile orta saha arasında sabit bir görevi olmadan serbestçe dolaşan yaratıcı 10 numara.'},
+  {term:'Box-to-Box Orta Saha', cat:'hucum', def:'Sahanın her iki ucunda da etkili olan, hem savunmaya hem hücuma enerjik katkı veren orta saha tipi.'},
+  {term:'Progressive Pass (İlerletici Pas)', cat:'hucum', def:'Topu rakip kaleye belirgin şekilde yaklaştıran, oyunu ileri taşıyan pas.'},
+  {term:'Through Ball (Ara Pas)', cat:'hucum', def:'Savunma hattının arkasına, koşuya çıkan oyuncunun önüne gönderilen pas.'},
+  {term:'Switch of Play (Oyunu Çevirmek)', cat:'hucum', def:'Topu sahanın bir yanından diğerine hızla taşıyarak rakip savunma bloğunu kaydırmaya zorlamak.'},
+  {term:'Width (Genişlik)', cat:'hucum', def:'Takımın sahayı enlemesine kullanması; kanat oyuncularının çizgiye yakın durup savunmayı germesi.'},
+  {term:'Verticality (Dikey Oyun)', cat:'hucum', def:'Topu yanlara dolaştırmak yerine doğrudan ileriye, dikine ilerletme tercihi.'},
+  {term:'Combination Play (Kombinasyon Oyunu)', cat:'hucum', def:'Dar alanda kısa ve hızlı paslaşmalarla rakip savunmayı çözme yöntemi.'},
+  {term:'One-Two (Bir-İki)', cat:'hucum', def:'İki oyuncunun kısa bir pasla rakibi geçmesi; pası veren oyuncu anında boşluğa koşar.'},
+  {term:'Diagonal Run (Çapraz Koşu)', cat:'hucum', def:'Oyuncunun savunma hattını çapraz açıyla yarmaya çalıştığı koşu; markajdan sıyrılmayı kolaylaştırır.'},
+  {term:'Late Run (Geç Koşu)', cat:'hucum', def:'Hücum anında ceza sahasına sonradan, markajdan fark edilmeden giren oyuncunun koşusu.'},
+  {term:'Overload to Isolate', cat:'hucum', def:'Topu bir tarafta sayısal üstünlükle tutup sonra hızla çevirerek diğer tarafta 1v1 avantajı yaratma taktiği.'},
+  {term:'Build-up Play (Topla Çıkış)', cat:'hucum', def:'Kaleci ve savunma hattından başlayıp orta sahaya kadar topu güvenli şekilde ilerletme süreci.'},
+  {term:'Progressive Carry (İlerletici Top Sürme)', cat:'hucum', def:'Bir oyuncunun topu ayağında sürerek rakip alana doğru belirgin mesafe kat etmesi.'},
+  {term:'Passing Lane (Pas Koridoru)', cat:'hucum', def:'İki rakip oyuncu arasından güvenle pas geçirilebilecek açık hat.'},
+  {term:'Box Occupation (Kutu Doluluğu)', cat:'hucum', def:'Orta veya şut anında ceza sahasının farklı noktalarının (yakın direk, uzak direk, penaltı noktası) oyuncularla doldurulması.'},
+  {term:'Half-Back', cat:'hucum', def:'Stoperin topla çıkışta orta sahaya çekilip üçüncü bir oyun kurucu gibi görev yapması.'},
+  {term:'Rest Defense (Dinlenme Savunması)', cat:'hucum', def:'Hücum anında geride bırakılan oyuncuların, top kaybında anında karşı atağı önleyecek şekilde konumlanması.'},
+  {term:'Zonal Marking (Bölge Markajı)', cat:'savunma', def:'Oyuncunun belirli bir rakibi değil, belirli bir alanı savunduğu markaj anlayışı.'},
+  {term:'Man Marking (Adam Markajı)', cat:'savunma', def:'Her savunmacının sahanın her yerinde belirli bir rakibi takip ettiği markaj anlayışı.'},
+  {term:'Offside Trap (Ofsayt Tuzağı)', cat:'savunma', def:'Savunma hattının senkronize şekilde ileri çıkarak rakip oyuncuyu ofsayt konumuna düşürmesi.'},
+  {term:'Low Block (Alçak Blok)', cat:'savunma', def:'Takımın kendi ceza sahasına yakın, geride ve sıkışık bir savunma bloğu kurması.'},
+  {term:'Mid Block (Orta Blok)', cat:'savunma', def:'Savunma organizasyonunun sahanın orta bölgesinde, ne çok geride ne çok ileride kurulması.'},
+  {term:'High Block / Yüksek Pres', cat:'savunma', def:'Savunmanın rakip yarı sahaya yakın, agresif bir hatla başlaması.'},
+  {term:'Compactness (Kompaktlık)', cat:'savunma', def:'Takımın hatları (savunma-orta saha-hücum) arasındaki mesafenin az tutulması, boşluk bırakılmaması.'},
+  {term:'Defensive Line (Savunma Hattı)', cat:'savunma', def:'Stoper ve beklerin birlikte oluşturduğu, yükselip alçalabilen savunma çizgisi.'},
+  {term:'Covering (Yardım/Destek)', cat:'savunma', def:'Markaj yapan savunmacıya arkasından mesafeli destek vererek hata payını azaltan ikinci savunmacının görevi.'},
+  {term:'Tracking Back (Geri Dönüş)', cat:'savunma', def:'Hücum anından sonra oyuncunun hızla kendi yarı sahasına dönüp savunmaya katkı vermesi.'},
+  {term:'Jockeying (Zaman Kazandırma)', cat:'savunma', def:'Topla gelen rakibe hemen müdahale etmeden onu geciktirip takım arkadaşlarının toparlanmasına zaman kazandırmak.'},
+  {term:'Doubling Up (İkili Baskı)', cat:'savunma', def:'İki savunmacının aynı anda aynı rakibe baskı kurarak topu kazanmaya çalışması.'},
+  {term:'Sweeper (Libero)', cat:'savunma', def:'Savunma hattının gerisinde özgürce hareket eden, ortaya çıkan boşlukları temizleyen klasik savunmacı rolü.'},
+  {term:'Last Man (Son Adam)', cat:'savunma', def:'Savunma hattındaki en gerideki oyuncu; genelde kritik kural durumlarında (kırmızı kart, pozisyon) bu rol öne çıkar.'},
+  {term:'Pressing Resistance (Pres Direnci)', cat:'savunma', def:'Bir oyuncunun yoğun rakip baskısı altında bile topu kaybetmeden oyunu sürdürebilme yeteneği.'},
+  {term:'Gegenpressing (Karşı Pres)', cat:'pres', def:'Topu kaybeder kaybetmez anında ve yüksek yoğunlukla baskı kurup topu hemen geri kazanmaya dayanan felsefe (Jürgen Klopp ile özdeşleşmiştir).'},
+  {term:'Counter-Press', cat:'pres', def:'Gegenpress ile eşanlamlı: top kaybı anındaki ani ve yoğun baskı.'},
+  {term:'Pressing Trigger (Pres Tetikleyicisi)', cat:'pres', def:'Takımın yüksek baskıyı başlatmasına sebep olan an; örneğin rakibin geriye pası ya da kötü top kontrolü.'},
+  {term:'Pressing Trap (Pres Tuzağı)', cat:'pres', def:'Rakibi bilerek belirli (genelde kenar) bir koridora yönlendirip orada sayısal üstünlükle topu kazanma planı.'},
+  {term:'Pressing Intensity (Pres Yoğunluğu)', cat:'pres', def:'Bir takımın rakip topa sahipken ne kadar sık, hızlı ve agresif baskı kurduğunun genel ölçüsü.'},
+  {term:'Counter-Attack (Kontra Atak)', cat:'pres', def:'Rakip hücumdayken geride kalan boşlukları hızla değerlendiren ani atak.'},
+  {term:'Transition (Geçiş Oyunu)', cat:'pres', def:'Topun savunmadan hücuma veya hücumdan savunmaya geçtiği kritik anlar.'},
+  {term:'Defensive Transition (Savunma Geçişi)', cat:'pres', def:'Top kaybedildiği anda takımın hücum düzeninden savunma düzenine geçiş süreci.'},
+  {term:'Offensive Transition (Hücum Geçişi)', cat:'pres', def:'Top kazanıldığı anda takımın savunma düzeninden hücum düzenine geçiş süreci.'},
+  {term:'Direct Play (Dikine Oyun)', cat:'pres', def:'Topu mümkün olan en kısa yoldan, uzun paslarla rakip kaleye taşıma tercihi.'},
+  {term:'Possession Football (Topa Sahip Olma)', cat:'pres', def:'Topu uzun süre elde tutup rakibi yorarak ve boşluk bularak ilerlemeye dayanan oyun anlayışı.'},
+  {term:'Tiki-Taka', cat:'pres', def:'Kısa, hızlı paslaşmalar ve sürekli pozisyon oyunuyla topu elde tutan İspanyol kökenli oyun felsefesi.'},
+  {term:'Juego de Posición (Pozisyon Oyunu)', cat:'pres', def:'Sahanın zonlara bölünüp her zonda doğru sayı ve doğru oyuncu tipiyle üstünlük kurmaya dayanan felsefe.'},
+  {term:'Rondo', cat:'pres', def:'Dar alanda top kapma/tutma antrenmanı; baskı altında hızlı pas ve karar verme pratiği yaptırır.'},
+  {term:'PPDA (Pas/Savunma Aksiyonu)', cat:'pres', def:'Rakibin kendi yarı sahasında topu kaç pasla kaybettiğini ölçen, bir takımın pres yoğunluğunu gösteren istatistik — düşük PPDA agresif presi işaret eder.'},
+  {term:'Back Three / Back Four', cat:'yapi', def:'Üçlü veya dörtlü savunma hattıyla oynanan sistemler.'},
+  {term:'Double Pivot (Çift Altı)', cat:'yapi', def:'İki merkez orta sahanın birlikte takımın dengesini ve topla çıkışını üstlendiği sistem.'},
+  {term:'Single Pivot (Tek Altı)', cat:'yapi', def:'Tek bir savunma orta sahasının (6 numara) denge görevini tek başına üstlendiği sistem.'},
+  {term:'Sweeper-Keeper (Libero Kaleci)', cat:'yapi', def:'Kale çizgisinin dışına çıkıp savunma hattının bir parçası gibi oynayan, ayak becerisi yüksek kaleci tipi.'},
+  {term:'Asymmetric Formation (Asimetrik Diziliş)', cat:'yapi', def:'Sahanın sağ ve sol tarafında farklı görev/rol dağılımı bulunan diziliş.'},
+  {term:'Fluid Formation (Akışkan Diziliş)', cat:'yapi', def:'Oyuncuların sabit pozisyonlarda kalmayıp maç içinde sık sık rol/alan değiştirdiği sistem.'},
+  {term:'Front Two (İkili Forvet)', cat:'yapi', def:'İki santrforla oynanan klasik hücum hattı sistemi.'},
+  {term:'Diamond Midfield (Elmas Orta Saha)', cat:'yapi', def:'Orta sahanın baklava dilimi şeklinde dizildiği sistem: bir altı, iki yan, bir on numara.'},
+  {term:'Christmas Tree (4-3-2-1)', cat:'yapi', def:'Orta sahanın forvete doğru daralarak sivrildiği, Noel ağacına benzeyen klasik diziliş.'},
+  {term:'Catenaccio', cat:'yapi', def:'İtalyan kökenli, son derece savunma ağırlıklı ve libero kullanan klasik sistem.'},
+  {term:'Total Football (Totaalvoetbal)', cat:'yapi', def:'Oyuncuların sabit pozisyona bağlı kalmadan birbirinin yerini sürekli doldurduğu, Hollanda kökenli felsefe (Ajax/Cruyff ile özdeşleşir).'},
+  {term:'Wing-back (Kanat Beki)', cat:'yapi', def:'Üçlü savunma sistemlerinde hem savunma hem kanat genişliği görevini üstlenen bek tipi.'},
+  {term:'Inverted Full-back (İçe Giren Bek)', cat:'yapi', def:'Hücumda klasik kanat koşusu yerine içe, orta sahaya doğru giren bek rolü.'},
+  {term:'Set Piece (Duran Top)', cat:'duran', def:'Korner, serbest vuruş, penaltı gibi oyunun durdurulduğu bir anla başlayan, önceden prova edilebilen oyun.'},
+  {term:'Near Post / Far Post (Yakın/Uzak Direk)', cat:'duran', def:'Kornerlerde kalecinin daha yakın olduğu direk (yakın) ve daha uzak olduğu direk (uzak); hücum/savunma planları buna göre kurulur.'},
+  {term:'Zonal Defending at Corners (Bölgesel Korner Savunması)', cat:'duran', def:'Kornerlerde oyuncuların belirli bir rakibi değil, ceza sahasındaki belirli bölgeleri savunması.'},
+  {term:'Short Corner (Kısa Korner)', cat:'duran', def:'Kornerin direkt kutuya atılmak yerine yakındaki bir takım arkadaşına kısa oynanması.'},
+  {term:'Screening (Perdeleme)', cat:'duran', def:'Duran toplarda bir oyuncunun kalecinin görüş açısını kapatacak şekilde pozisyon alması.'},
+  {term:'xG (Gol Beklentisi)', cat:'genel', def:'Bir şutun pozisyon kalitesine (açı, mesafe, baskı vb.) göre gol olma olasılığını sayısal olarak ifade eden istatistik.'},
+  {term:'xA (Asist Beklentisi)', cat:'genel', def:'Bir pasın, aldığı şutun gol olma olasılığına göre "beklenen asist" değerini ölçen istatistik.'},
+  {term:'Numerical Superiority (Sayısal Üstünlük)', cat:'genel', def:'Sahanın belirli bir bölgesinde veya genelinde rakipten daha fazla oyuncuyla bulunma durumu; overload ile yakından ilişkilidir.'},
+  {term:'Game Model (Oyun Modeli)', cat:'genel', def:'Bir takımın hücum, savunma, geçiş ve duran toplarda nasıl oynayacağını tanımlayan bütünsel, kalıcı plan.'},
+  {term:'Game Plan (Maç Planı)', cat:'genel', def:'Belirli bir rakibe özel hazırlanan, o maça has taktik yaklaşım.'},
+  {term:'Game State (Maç Durumu)', cat:'genel', def:'Skor, kalan süre, kart durumu gibi anlık faktörlerin takımın o andaki taktik tercihini şekillendirmesi.'},
+  {term:'Game Intelligence (Oyun Zekası)', cat:'genel', def:'Oyuncunun sahadaki durumları doğru okuyup en doğru kararı hızla alabilme yeteneği.'},
+  {term:'Scanning (Tarama)', cat:'genel', def:'Oyuncunun topu almadan önce başını çevirip etrafındaki rakip/arkadaş pozisyonları hakkında bilgi toplaması.'},
+  {term:'First Touch (İlk Dokunuş)', cat:'genel', def:'Bir oyuncunun topu karşılarkenki ilk temasının kalitesi; iyi bir ilk dokunuş sonraki aksiyonu kolaylaştırır.'},
+  {term:'Tempo (Oyun Temposu)', cat:'genel', def:'Takımın pas hızı ve genel olarak oyunu oynama hızı.'},
+  {term:'Game Management (Oyun Yönetimi)', cat:'genel', def:'Özellikle skor avantajı varken zamanı ve temposu kontrol ederek sonucu koruma becerisi.'},
+  {term:'Chemistry (Oyuncu Kimyası)', cat:'genel', def:'Oyuncular arasındaki anlaşmanın/uyumun sahadaki paslaşma ve hareket senkronuna yansıması.'}
+];
+const glossaryState = {cat:'all', q:''};
+function renderGlossary(content){
+  const cats = [{key:'all', label:'Tümü'}, ...GLOSSARY_CATS];
+  content.innerHTML = `
+    <div class="card dossier" style="margin-bottom:14px;">
+      <input type="text" id="glossarySearch" placeholder="Terim ara... (örn. half space, gegenpress, xg)" value="${esc(glossaryState.q)}" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:var(--soft2); font-size:13.5px; margin-bottom:10px;">
+      <div class="subtabs" id="glossaryCats" style="margin-bottom:0;">
+        ${cats.map(c=>`<button data-cat="${c.key}" class="${glossaryState.cat===c.key?'active':''}">${esc(c.label)}</button>`).join('')}
+      </div>
+    </div>
+    <div id="glossaryCount" style="font-size:11.5px; color:var(--ink2); margin:0 2px 8px;"></div>
+    <div id="glossaryList"></div>
+  `;
+  renderGlossaryList(content);
+  content.querySelector('#glossarySearch').oninput = (e)=>{ glossaryState.q = e.target.value; renderGlossaryList(content); };
+  content.querySelectorAll('#glossaryCats button').forEach(btn=>{
+    btn.onclick = ()=>{ glossaryState.cat = btn.getAttribute('data-cat'); renderGlossary(content); };
+  });
+}
+function renderGlossaryList(content){
+  const box = content.querySelector('#glossaryList');
+  const countBox = content.querySelector('#glossaryCount');
+  const q = (glossaryState.q||'').toLocaleLowerCase('tr');
+  const filtered = GLOSSARY_TERMS.filter(t=>{
+    if(glossaryState.cat!=='all' && t.cat!==glossaryState.cat) return false;
+    if(!q) return true;
+    return (t.term+' '+t.def).toLocaleLowerCase('tr').includes(q);
+  });
+  if(countBox) countBox.textContent = filtered.length+' terim';
+  if(!filtered.length){ box.innerHTML = '<div class="card dossier empty"><div class="display">Sonuç Yok</div><p>Aramanı ya da kategori filtresini değiştirmeyi dene.</p></div>'; return; }
+  const catMeta = Object.fromEntries(GLOSSARY_CATS.map(c=>[c.key,c]));
+  box.innerHTML = `<div class="card dossier">${filtered.map(t=>{
+    const c = catMeta[t.cat];
+    return `
+    <div class="note-review-row" style="align-items:flex-start; cursor:default;">
+      <span class="badge" style="background:${c.color}; color:#fff; flex-shrink:0;">${c.icon}</span>
+      <div class="nbody" style="min-width:0;"><b>${esc(t.term)}</b><p style="white-space:normal; overflow:visible; text-overflow:unset;">${esc(t.def)}</p></div>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 // ---------- settings modal ----------
@@ -8445,7 +8597,7 @@ function matchRatingColor(v){
   return '#E0301E';
 }
 function ratingChip(v){ v = parseFloat(v); return isNaN(v) ? '' : `<span class="rchip" style="background:${matchRatingColor(v)}">${v.toFixed(1)}</span>`; }
-const NAV_LABEL = {matches:'Maçlar', discover:'Keşfet', myteams:'Takımlarım', myplayers:'Oyuncularım', standings:'Ligler', notes:'Notlarım'};
+const NAV_LABEL = {matches:'Maçlar', discover:'Keşfet', myteams:'Takımlarım', myplayers:'Oyuncularım', standings:'Ligler', notes:'Notlarım', sozluk:'Sözlük'};
 VIEW_META.standings.label = 'Ligler';
 async function checkLiveMatches(){ /* canlı şerit kaldırıldı - maç listesi kendisi canlı güncelleniyor */ }
 
@@ -8463,13 +8615,14 @@ function render(){
   else if(state.view==='team') renderTeamDetail(content);
   else if(state.view==='standings') renderStandings(content);
   else if(state.view==='notes') renderNotesReview(content);
+  else if(state.view==='sozluk') renderGlossary(content);
   else renderMatchesHome(content);
 }
 function renderHome(content, opts){ return renderMatchesHome(content, opts); }
 function renderHeader(){
   const v = state.view;
   const title = v==='team' && state.currentTeam ? state.currentTeam.name : (NAV_LABEL[v] || 'Scout');
-  const navKeys = ['matches','discover','myteams','myplayers','standings','notes'];
+  const navKeys = ['matches','discover','myteams','myplayers','standings','notes','sozluk'];
   return `<header class="appbar"><div class="ab-row">
     <button class="ab-logo" data-go="matches" aria-label="Maçlar"><span class="lg">⚽</span><span>Scout</span></button>
     <div class="ab-title">${v==='matches' ? '' : esc(title)}</div>
@@ -8478,9 +8631,9 @@ function renderHeader(){
   </div></header>`;
 }
 function renderNav(){
-  const items = ['matches','myteams','myplayers','standings','notes'];
+  const items = ['matches','myteams','myplayers','standings','notes','sozluk'];
   const cur = state.view==='team' ? 'myteams' : state.view;
-  const lbl = {matches:'Maçlar', myteams:'Takımlar', myplayers:'Oyuncular', standings:'Ligler', notes:'Notlar'};
+  const lbl = {matches:'Maçlar', myteams:'Takımlar', myplayers:'Oyuncular', standings:'Ligler', notes:'Notlar', sozluk:'Sözlük'};
   return '<nav class="bnav">'+items.map(k=>`<button data-go="${k}" class="${cur===k?'active':''}">${ICONS[k]}<span>${lbl[k]}</span></button>`).join('')+'</nav>';
 }
 function renderSideNav(){ return ''; }

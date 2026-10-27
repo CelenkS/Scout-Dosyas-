@@ -723,8 +723,10 @@ h1,h2,h3,.display{letter-spacing:-.01em}
 .modal{border-radius:18px;background:var(--bg)}
 .modal:not(.fxmodal){background:var(--surface)}
 @media (min-width:1100px){
-  .modal-overlay:has(.fxmodal){justify-content:flex-end;padding:0;background:rgba(10,14,20,.35)}
-  .fxmodal{height:100vh;max-height:100vh;width:600px;max-width:600px;border-radius:0;animation:slidein .25s cubic-bezier(.2,.8,.2,1) both}
+  .modal-overlay:has(.fxmodal){padding:0;background:rgba(10,14,20,.5)}
+  .fxmodal{height:100vh;max-height:100vh;width:100vw;max-width:100vw;border-radius:0;animation:fadein .2s ease both}
+  .fxmodal>*:not(.fxh):not(.close):not(#fxScoreHeader){max-width:860px;margin-left:auto;margin-right:auto}
+  .fxmodal .fxh{max-width:none}
 }
 @keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 .fxmodal{padding:0 0 24px}
@@ -4544,7 +4546,9 @@ async function openFixtureModal(fx){
   const isLive = LIVE_STATUSES.includes(fx.fixture.status.short);
   function scoreHeaderHtml(fxx, hFlag, aFlag){ return fxHeaderHtml(fxx, hFlag, aFlag); }
   const _hasNote = !!(existing && payloadHasContent(existing.payload));
-  const _defTab = _hasNote ? 'notes' : (isLive || played) ? 'events' : 'lineups';
+  // mac henuz baslamadiysa ilk 11'ler her zaman on planda gelsin (daha once not alinmis olsa bile);
+  // canli/bitmis maclarda eski davranis gecerli: notun varsa direkt notlara, yoksa olaylara git
+  const _defTab = (!isLive && !played) ? 'lineups' : (_hasNote ? 'notes' : 'events');
   overlay.innerHTML = `
     <div class="modal fxmodal">
       <button class="close" aria-label="Kapat">&times;</button>

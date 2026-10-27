@@ -724,16 +724,19 @@ h1,h2,h3,.display{letter-spacing:-.01em}
 /* modal -> masaüstünde sağ panel */
 .modal{border-radius:18px;background:var(--bg)}
 .modal:not(.fxmodal){background:var(--surface)}
+@keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.fxmodal{padding:0 0 24px}
+.fxmodal>*:not(.fxh):not(.close):not(#fxScoreHeader){margin-left:12px;margin-right:12px}
+.fxmodal .close{top:calc(10px + env(safe-area-inset-top,0px));right:10px;background:rgba(255,255,255,.18);color:#fff}
 @media (min-width:1100px){
+  /* masaustunde tam ekran, ama icerik okunakli olsun diye ortadaki 860px'lik sutunda - bu kural .fxmodal{padding:0 0 24px}
+     bloğundaki 12px kenar boşluğu kuralından SONRA gelmeli, yoksa ayni ozellik (margin-left/right) icin ayni ozgulluktaki
+     kural kaynak sirasina gore kazanir ve ortalama hic uygulanmaz (icerik sola yasli kalir, sagda bos siyah alan kalir) */
   .modal-overlay:has(.fxmodal){padding:0;background:rgba(10,14,20,.5)}
   .fxmodal{height:100vh;max-height:100vh;width:100vw;max-width:100vw;border-radius:0;animation:fadein .2s ease both}
   .fxmodal>*:not(.fxh):not(.close):not(#fxScoreHeader){max-width:860px;margin-left:auto;margin-right:auto}
   .fxmodal .fxh{max-width:none}
 }
-@keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
-.fxmodal{padding:0 0 24px}
-.fxmodal>*:not(.fxh):not(.close):not(#fxScoreHeader){margin-left:12px;margin-right:12px}
-.fxmodal .close{top:calc(10px + env(safe-area-inset-top,0px));right:10px;background:rgba(255,255,255,.18);color:#fff}
 @media (max-width:640px){ .fxmodal::before{display:none} .modal-overlay:has(.fxmodal){align-items:stretch} .fxmodal{max-height:100vh;height:100%;border-radius:0} }
 /* maç başlığı */
 .fxh{border-radius:0;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 16px;background:linear-gradient(180deg,var(--hero1),var(--hero2))}
